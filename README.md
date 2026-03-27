@@ -1,4 +1,12 @@
-# Forge
+```
+    ███████╗ ██████╗ ██████╗  ██████╗ ███████╗
+    ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝
+    █████╗  ██║   ██║██████╔╝██║  ███╗█████╗
+    ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝
+    ██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗
+    ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+         Casey's Claude Code Workflow
+```
 
 Phase-locked development workflow for Claude Code. Enforces earned progression through discovery, design, planning, execution, verification, and integration with evidence gates at every transition.
 
