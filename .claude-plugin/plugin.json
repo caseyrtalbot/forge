@@ -1,0 +1,20 @@
+{
+  "name": "forge",
+  "version": "1.0.0",
+  "description": "Phase-locked development workflow plugin. Enforces earned progression through discovery, design, planning, execution, verification, and integration with evidence gates at every transition.",
+  "author": {
+    "name": "Forge Contributors"
+  },
+  "homepage": "https://github.com/forge-workflow/forge",
+  "repository": "https://github.com/forge-workflow/forge",
+  "license": "MIT",
+  "keywords": [
+    "workflow",
+    "phase-locked",
+    "evidence-gates",
+    "tdd",
+    "code-review",
+    "verification",
+    "planning"
+  ]
+}

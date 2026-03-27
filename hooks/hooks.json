@@ -1,0 +1,67 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-init.js\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/phase-gate.js\"",
+            "timeout": 15
+          }
+        ],
+        "description": "Prevents code edits when the current workflow phase requires design or planning first"
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/commit-guardian.js\"",
+            "timeout": 15
+          }
+        ],
+        "description": "Validates verification has passed before allowing git commits"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/evidence-collector.js\"",
+            "timeout": 15
+          }
+        ],
+        "description": "Captures test results and build outputs as verification evidence"
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-capture.js\"",
+            "timeout": 15,
+            "async": true
+          }
+        ],
+        "description": "Saves workflow state for cross-session continuity"
+      }
+    ]
+  }
+}

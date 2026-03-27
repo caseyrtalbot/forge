@@ -1,0 +1,14 @@
+{
+  "name": "forge",
+  "version": "1.0.0",
+  "description": "Phase-locked development workflow plugin for Claude Code",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "workflow",
+    "phase-locked",
+    "evidence-gates",
+    "claude-code",
+    "plugin"
+  ]
+}
