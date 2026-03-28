@@ -86,3 +86,27 @@ Handle errors at the appropriate level. Do not swallow errors silently. Do not e
 ### Scope Discipline
 
 Only modify files that the current task requires. Do not make "while I'm here" changes to unrelated code. Do not add features not in the spec. Do not refactor code that is not part of the current plan.
+
+---
+
+## Agent Collaboration
+
+### Fresh Agents Per Task
+
+Dispatch a fresh agent instance for each task. Do not reuse agents across tasks. Fresh agents prevent context pollution and ensure each task gets focused attention.
+
+### Agent Context
+
+When delegating work to a subagent, provide precise context: the specific task, relevant file paths, success criteria, and scope boundaries. Do not dump the entire project history. Construct exactly what the agent needs.
+
+### Review Before Trust
+
+Do not blindly accept agent output. Review the agent's work before acting on it. Check that the output matches the expected format, addresses the task, and does not contain hallucinated information.
+
+### Parallel Dispatch
+
+When tasks are independent (no shared state, no sequential dependencies), dispatch agents in parallel. When tasks depend on each other, dispatch sequentially.
+
+### Model Routing
+
+Use opus for tasks requiring judgment, reasoning, and contextual understanding (code review, architecture, security analysis, implementation). Use sonnet for mechanical tasks where speed matters more than depth (file search, documentation sync, dependency mapping).
