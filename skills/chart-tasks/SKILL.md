@@ -7,7 +7,7 @@ transitions:
     condition: "Plan is complete with all tasks having verification criteria"
 gates:
   entry: "Approved spec document exists"
-  exit: "Plan document written with ordered tasks, each having file paths, verification criteria, and dependencies"
+  exit: "Plan document written with ordered tasks, each having file paths, verification criteria, and dependencies. User has reviewed and approved the plan."
 ---
 
 # Chart Tasks
@@ -34,6 +34,9 @@ digraph chart_tasks {
     "Order by dependencies" [shape=box];
     "Self-review plan" [shape=box];
     "Write plan to file" [shape=box];
+    "Present plan to user" [shape=box];
+    "User approves plan?" [shape=diamond];
+    "Revise plan" [shape=box];
     "Invoke drive-execution" [shape=doublecircle];
 
     "Read approved spec" -> "Identify components";
@@ -43,7 +46,11 @@ digraph chart_tasks {
     "Add verification to each" -> "Order by dependencies";
     "Order by dependencies" -> "Self-review plan";
     "Self-review plan" -> "Write plan to file";
-    "Write plan to file" -> "Invoke drive-execution";
+    "Write plan to file" -> "Present plan to user";
+    "Present plan to user" -> "User approves plan?";
+    "User approves plan?" -> "Invoke drive-execution" [label="yes"];
+    "User approves plan?" -> "Revise plan" [label="no"];
+    "Revise plan" -> "Write plan to file";
 }
 ```
 
@@ -66,6 +73,8 @@ digraph chart_tasks {
    - Are dependencies correctly ordered (no circular dependencies)?
    - Are types, method signatures, and names consistent across tasks?
 8. **Write plan to file** at `docs/forge/plans/YYYY-MM-DD-<topic>-plan.md`
+9. **Present the plan to the user** for review. Summarize: total tasks, dependency order, estimated parallelism, and any assumptions made during decomposition. The plan is the contract for what gets built. Do not proceed without explicit user approval.
+10. **If the user requests changes**, revise the plan and present again. Repeat until approved.
 
 ## Task Template
 
@@ -95,7 +104,8 @@ Dependencies discovered during execution cause rework. Map them now when the cos
 - Plan file exists at the documented path
 - Every task has a description, file paths, and verification criteria
 - Self-review confirms no spec requirements are missed
+- User has reviewed and approved the plan
 
 ## Transition
 
-When the plan is complete, invoke **drive-execution** to begin task implementation.
+When the plan is complete and the user has approved it, invoke **drive-execution** to begin task implementation.
