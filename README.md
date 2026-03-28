@@ -97,7 +97,7 @@ Two additional skills work across all phases:
 | `trace-fault` | Any | Hypothesis-driven debugging |
 | `distill-lessons` | Any | Workflow retrospective |
 
-### 10 Agents
+### 9 Agents
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
@@ -110,7 +110,6 @@ Two additional skills work across all phases:
 | `dependency-mapper` | sonnet | Trace change impact across codebase |
 | `integration-verifier` | opus | Run full test suite and build checks |
 | `doc-synthesizer` | sonnet | Keep docs in sync with code changes |
-| `perf-profiler` | opus | Identify performance anti-patterns |
 
 ### 5 Hooks
 

@@ -11,6 +11,9 @@
     "claude-code",
     "plugin"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "test": "node tests/run-tests.cjs"
   }

@@ -69,7 +69,9 @@ function main() {
     // Create evidence directory if it does not exist
     fs.mkdirSync(evidenceDir, { recursive: true });
 
-    const filename = isTest ? "test-results.txt" : "build-results.txt";
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const prefix = isTest ? "test-results" : "build-results";
+    const filename = `${prefix}-${timestamp}.txt`;
     const evidencePath = path.join(evidenceDir, filename);
 
     // Sanitize stdin-sourced values before writing to disk
@@ -81,10 +83,10 @@ function main() {
     const safeCommand = sanitize(command, 500);
     const safeOutput = sanitize(output, 10000);
 
-    const timestamp = new Date().toISOString();
+    const readableTimestamp = new Date().toISOString();
     const content = [
       `# ${isTest ? "Test" : "Build"} Results`,
-      `Captured: ${timestamp}`,
+      `Captured: ${readableTimestamp}`,
       `Command: ${safeCommand}`,
       "",
       "## Output",

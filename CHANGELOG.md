@@ -16,7 +16,7 @@ Initial release of Forge.
 - `trace-fault` -- hypothesis-driven debugging with tracking
 - `distill-lessons` -- workflow retrospective
 
-### Agents (10)
+### Agents (9)
 - `spec-analyst` -- validates specs for completeness and contradictions
 - `task-decomposer` -- breaks specs into executable tasks
 - `implementer` -- executes single tasks with test-first discipline
@@ -26,7 +26,6 @@ Initial release of Forge.
 - `dependency-mapper` -- change impact analysis
 - `integration-verifier` -- full test suite and build verification
 - `doc-synthesizer` -- documentation sync
-- `perf-profiler` -- performance anti-pattern detection
 
 ### Hooks (5)
 - `session-init` -- loads workflow state on session start

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Forge is a Claude Code plugin that enforces a phase-locked development workflow. It consists of 10 skills, 10 agents, 5 hooks, 4 commands, and 4 rule files organized into a standard Claude Code plugin structure.
+Forge is a Claude Code plugin that enforces a phase-locked development workflow. It consists of 10 skills, 9 agents, 5 hooks, 4 commands, and a project-level CLAUDE.md organized into a standard Claude Code plugin structure.
 
 ## Plugin Structure
 
@@ -33,25 +33,20 @@ forge/
     dependency-mapper.md     # Change impact analysis (sonnet, read-only)
     integration-verifier.md  # Full suite + build checks (opus, read+bash)
     doc-synthesizer.md       # Documentation sync (sonnet, read+write)
-    perf-profiler.md         # Performance anti-patterns (opus, read+bash)
   hooks/
     hooks.json               # Hook event declarations
   scripts/hooks/
-    session-init.js          # SessionStart: load state, show status
-    phase-gate.js            # PreToolUse: block code edits in pre-execution phases
-    evidence-collector.js    # PostToolUse: capture test/build output
-    commit-guardian.js       # PreToolUse: validate verification before commits
-    session-capture.js       # Stop: save state for cross-session continuity
+    session-init.cjs          # SessionStart: load state, show status
+    phase-gate.cjs            # PreToolUse: block code edits in pre-execution phases
+    evidence-collector.cjs    # PostToolUse: capture test/build output
+    commit-guardian.cjs       # PreToolUse: validate verification before commits
+    session-capture.cjs       # SessionEnd: save state for cross-session continuity
   commands/
     start.md                 # /forge:start -- initiate workflow
     status.md                # /forge:status -- show phase and progress
     advance.md               # /forge:advance -- check gates, progress
     audit.md                 # /forge:audit -- quality/security/completeness check
-  rules/common/
-    workflow.md              # Phase awareness and state management
-    quality.md               # Test-first, evidence, review standards
-    safety.md                # Destructive ops, secrets, input validation
-    collaboration.md         # Agent dispatch, model routing, review
+  CLAUDE.md                  # Consolidated rules (workflow, quality, safety)
   .codex/AGENTS.md           # Codex CLI compatibility
   gemini-extension.json      # Gemini CLI compatibility
   docs/                      # Design docs, validation reports
@@ -105,7 +100,7 @@ Workflow state lives in `.forge/` inside the project (not in a global location).
 
 | Model | Agents | Rationale |
 |-------|--------|-----------|
-| opus | spec-analyst, task-decomposer, implementer, quality-auditor, security-sentinel, test-strategist, integration-verifier, perf-profiler | Reasoning, judgment, contextual understanding |
+| opus | spec-analyst, task-decomposer, implementer, quality-auditor, security-sentinel, test-strategist, integration-verifier | Reasoning, judgment, contextual understanding |
 | sonnet | dependency-mapper, doc-synthesizer | Mechanical search, pattern matching |
 
 ## Security Model

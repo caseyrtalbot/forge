@@ -52,13 +52,17 @@ function readFixture(name) {
 }
 
 function runHook(hookPath, opts = {}) {
-  const { cwd, stdin } = opts;
-  return spawnSync("node", [hookPath], {
+  const { cwd, stdin, env: extraEnv } = opts;
+  const spawnOpts = {
     cwd: cwd || process.cwd(),
     input: stdin || "",
     encoding: "utf-8",
     timeout: 10000,
-  });
+  };
+  if (extraEnv) {
+    spawnOpts.env = { ...process.env, ...extraEnv };
+  }
+  return spawnSync("node", [hookPath], spawnOpts);
 }
 
 function test(name, fn) {
@@ -98,6 +102,31 @@ writeState(sessionCountDir, {
   current_phase: "execution",
   session_count: 3,
 });
+
+const designDir = makeTempDir("design");
+writeState(designDir, { current_phase: "design" });
+
+const planningDir = makeTempDir("planning");
+writeState(planningDir, { current_phase: "planning" });
+
+const verificationWithEvidenceDir = makeTempDir("verification-evidence");
+writeState(verificationWithEvidenceDir, { current_phase: "verification" });
+// Create evidence file so commit-guardian allows the commit
+const evidenceSubdir = path.join(
+  verificationWithEvidenceDir,
+  ".forge",
+  "evidence",
+  "verification"
+);
+fs.mkdirSync(evidenceSubdir, { recursive: true });
+fs.writeFileSync(
+  path.join(evidenceSubdir, "test-results-fake.txt"),
+  "# Test Results\nAll tests passed",
+  "utf-8"
+);
+
+const sessionInitDisabledDir = makeTempDir("session-init-disabled");
+writeState(sessionInitDisabledDir, { current_phase: "execution" });
 
 // ---------------------------------------------------------------------------
 // Phase Gate Tests
@@ -182,19 +211,28 @@ test("evidence-collector: captures test results from npm test", () => {
   });
   assert(result.status === 0, `Expected exit 0, got ${result.status}`);
 
-  const evidencePath = path.join(
+  // Evidence files now use timestamped names (e.g. test-results-2026-03-27T...)
+  const verificationDir = path.join(
     evidenceDir,
     ".forge",
     "evidence",
-    "verification",
-    "test-results.txt"
+    "verification"
   );
   assert(
-    fs.existsSync(evidencePath),
-    `Expected evidence file at ${evidencePath}`
+    fs.existsSync(verificationDir),
+    `Expected verification evidence directory at ${verificationDir}`
+  );
+  const evidenceFiles = fs.readdirSync(verificationDir);
+  const testResultFile = evidenceFiles.find((f) => f.startsWith("test-results"));
+  assert(
+    testResultFile,
+    `Expected a file starting with test-results, found: ${evidenceFiles.join(", ")}`
   );
 
-  const content = fs.readFileSync(evidencePath, "utf-8");
+  const content = fs.readFileSync(
+    path.join(verificationDir, testResultFile),
+    "utf-8"
+  );
   assert(
     content.includes("npm test"),
     `Expected evidence to contain command, got: ${content}`
@@ -211,17 +249,21 @@ test("evidence-collector: ignores non-test commands like ls", () => {
   });
   assert(result.status === 0, `Expected exit 0, got ${result.status}`);
 
-  const evidencePath = path.join(
+  // No verification directory should exist at all (or if it does, no test-results files)
+  const verificationPath = path.join(
     noEvidenceDir,
     ".forge",
     "evidence",
-    "verification",
-    "test-results.txt"
+    "verification"
   );
-  assert(
-    !fs.existsSync(evidencePath),
-    `Expected no evidence file, but found one at ${evidencePath}`
-  );
+  if (fs.existsSync(verificationPath)) {
+    const files = fs.readdirSync(verificationPath);
+    const hasTestResults = files.some((f) => f.startsWith("test-results"));
+    assert(
+      !hasTestResults,
+      `Expected no test-results evidence file, but found: ${files.join(", ")}`
+    );
+  }
 });
 
 // ---------------------------------------------------------------------------
@@ -277,6 +319,119 @@ test("session-capture: increments session_count", () => {
   assert(
     typeof state.last_session === "string",
     `Expected last_session to be set, got ${state.last_session}`
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Phase Gate Tests (continued): design and planning blocks
+// ---------------------------------------------------------------------------
+
+test("phase-gate: blocks .ts file write during design", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: designDir,
+    stdin: readFixture("pretooluse-write-ts-file.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    /permissionDecision.*deny/.test(result.stdout),
+    `Expected stdout to contain permissionDecision deny, got: ${result.stdout}`
+  );
+});
+
+test("phase-gate: blocks .ts file write during planning", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: planningDir,
+    stdin: readFixture("pretooluse-write-ts-file.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    /permissionDecision.*deny/.test(result.stdout),
+    `Expected stdout to contain permissionDecision deny, got: ${result.stdout}`
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Phase Gate Tests (continued): malformed and empty stdin
+// ---------------------------------------------------------------------------
+
+test("phase-gate: graceful failure on malformed JSON stdin", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: discoveryDir,
+    stdin: "not valid json",
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+});
+
+test("phase-gate: graceful failure on empty stdin", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: discoveryDir,
+    stdin: "",
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+});
+
+// ---------------------------------------------------------------------------
+// Phase Gate Tests (continued): FORGE_HOOK_PROFILE=minimal skips
+// ---------------------------------------------------------------------------
+
+test("phase-gate: skips in minimal profile", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: discoveryDir,
+    stdin: readFixture("pretooluse-write-ts-file.json"),
+    env: { FORGE_HOOK_PROFILE: "minimal" },
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    !/deny/.test(result.stdout),
+    `Expected no deny in stdout (hook should skip), got: ${result.stdout}`
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Commit Guardian Tests (continued): execution warning, verification allow
+// ---------------------------------------------------------------------------
+
+test("commit-guardian: warns during execution with no evidence", () => {
+  const result = runHook(HOOKS.commitGuardian, {
+    cwd: executionDir,
+    stdin: readFixture("pretooluse-bash-git-commit.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    !/deny/.test(result.stdout),
+    `Expected no deny in stdout (should warn, not block), got: ${result.stdout}`
+  );
+  assert(
+    /no test evidence/i.test(result.stderr),
+    `Expected stderr to contain warning about no test evidence, got: ${result.stderr}`
+  );
+});
+
+test("commit-guardian: allows during verification with evidence", () => {
+  const result = runHook(HOOKS.commitGuardian, {
+    cwd: verificationWithEvidenceDir,
+    stdin: readFixture("pretooluse-bash-git-commit.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    !/deny/.test(result.stdout),
+    `Expected no deny in stdout (evidence present), got: ${result.stdout}`
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Session Init Tests (continued): disabled hook
+// ---------------------------------------------------------------------------
+
+test("session-init: skips when FORGE_DISABLED_HOOKS=session-init", () => {
+  const result = runHook(HOOKS.sessionInit, {
+    cwd: sessionInitDisabledDir,
+    env: { FORGE_DISABLED_HOOKS: "session-init" },
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    result.stdout === "",
+    `Expected empty stdout (hook should be skipped), got: ${result.stdout}`
   );
 });
 

@@ -78,10 +78,7 @@ Deploy the **security-sentinel** agent to scan the diff for:
 - Unsafe input handling
 - Missing authentication/authorization checks
 
-### 5. Performance Review
-Deploy the **perf-profiler** agent to scan the diff for performance anti-patterns (N+1 queries, unbounded loops, missing pagination, memory leaks). Critical findings block progression.
-
-### 6. Spec Coverage Audit
+### 5. Spec Coverage Audit
 Read the original spec document. For each requirement, verify there is:
 - At least one implemented task addressing it
 - At least one test verifying it

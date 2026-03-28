@@ -8,7 +8,6 @@
   },
   "tool_response": {
     "stdout": "PASS src/index.test.ts\n  Tests: 5 passed, 5 total",
-    "stderr": "",
-    "exitCode": 0
+    "stderr": ""
   }
 }

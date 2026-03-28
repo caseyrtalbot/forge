@@ -12,7 +12,7 @@
 (unchanged from v1)
 
 ### Check 3: Agent Coverage Validation -- PASS (FIXED)
-All 10 agents are now referenced in skill or command prose:
+All 9 agents are now referenced in skill or command prose:
 
 | Agent | Referenced In |
 |---|---|
@@ -25,7 +25,6 @@ All 10 agents are now referenced in skill or command prose:
 | dependency-mapper | drive-execution |
 | integration-verifier | confirm-complete, commands/audit |
 | doc-synthesizer | land-changes |
-| perf-profiler | confirm-complete |
 
 Zero orphaned agents.
 
@@ -39,6 +38,6 @@ Zero orphaned agents.
 (unchanged from v1)
 
 ## Remediation Summary
-- 6 orphaned agents wired into skill prose (spec-analyst, task-decomposer, dependency-mapper, test-strategist, doc-synthesizer, perf-profiler)
-- Re-validation confirms all 10 agents are now referenced
+- 5 orphaned agents wired into skill prose (spec-analyst, task-decomposer, dependency-mapper, test-strategist, doc-synthesizer)
+- Re-validation confirms all 9 agents are now referenced
 - No new issues introduced by the remediation

@@ -12,11 +12,11 @@ All 11 build phases completed successfully. Final verification passed all checks
 | Component | Count |
 |-----------|-------|
 | Skills | 10 |
-| Agents | 10 |
+| Agents | 9 |
 | Hooks | 5 |
 | Commands | 4 |
-| Rules | 4 |
-| Total files | 54 |
+| CLAUDE.md | 1 |
+| Total files | 51 |
 
 ## Verification Results
 
@@ -42,9 +42,9 @@ All 11 build phases completed successfully. Final verification passed all checks
 | 2 | Design Principles | docs/design-principles.md |
 | 3 | Plugin Scaffold | 20/20 validation, all manifests |
 | 4 | Core Skills | 10 skills with hard gates and process flows |
-| 5 | Agent Team | 10 agents with scope boundaries |
+| 5 | Agent Team | 9 agents with scope boundaries |
 | 6 | Hook System | 5 hooks, security reviewed |
-| 7 | Rules and Cross-Platform | 4 rules, README, .codex, gemini |
+| 7 | Rules and Cross-Platform | CLAUDE.md, README, .codex, gemini |
 | 8 | Integration Testing | 6/6 checks pass |
 | 9 | Remediation | 6 orphaned agents wired |
 | 10 | Documentation and UX | README enhanced, UX issues fixed |

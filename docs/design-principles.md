@@ -189,7 +189,6 @@ Agents are named as **noun-specialist** describing their capability:
 | Impact analysis | `dependency-mapper` |
 | Integration testing | `integration-verifier` |
 | Documentation | `doc-synthesizer` |
-| Performance analysis | `perf-profiler` |
 
 ### Command Names
 Commands are named as **single imperative verbs**:

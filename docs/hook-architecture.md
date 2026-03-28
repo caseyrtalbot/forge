@@ -8,12 +8,12 @@
 | PreToolUse (Write/Edit) | phase-gate | Prevent code edits during discovery/design/planning phases |
 | PostToolUse (Bash) | evidence-collector | Capture test/build output as verification evidence |
 | PreToolUse (Bash matching git commit) | commit-guardian | Validate verification has passed before commits |
-| Stop | session-capture | Save workflow state for cross-session continuity |
+| SessionEnd | session-capture | Save workflow state for cross-session continuity |
 
 ## Execution Model
 
 - All hooks are **synchronous** (async: false) to ensure they complete before the tool runs
-- Exception: session-capture (Stop) is async since it runs after the session
+- session-capture runs on SessionEnd (synchronous) to ensure state is written before the process exits
 - All hooks have a **timeout of 15 seconds** (generous for file I/O operations)
 - All hooks **exit 0 on error** with a warning logged to stderr (never block catastrophically)
 
@@ -36,5 +36,16 @@ Disable specific hooks: `FORGE_DISABLED_HOOKS=phase-gate,commit-guardian`
 - All scripts are Node.js (cross-platform: macOS, Linux, Windows)
 - All paths use `${CLAUDE_PLUGIN_ROOT}` (no hardcoded paths)
 - Stdin receives JSON payload with tool input details
-- Exit codes: 0 = allow, 2 = block with message
+- Exit codes: 0 = success (JSON stdout parsed for structured control), non-zero = error (stderr logged)
+- Blocking hooks (phase-gate, commit-guardian) use `hookSpecificOutput.permissionDecision: "deny"` with exit 0
 - Hooks read `.forge/forge-state.json` from the current working directory for state
+- Phase-gate intercepts Write/Edit tools only. Bash commands that generate code files (scaffolding tools, code generators) are not gated. This is a deliberate tradeoff: gating Bash broadly would create false positives on routine commands.
+
+## Commit Guardian Behavior by Phase
+
+| Phase | Behavior |
+|-------|----------|
+| discovery, design, planning | Allow (commits are for docs/specs/plans) |
+| execution | Warn if no test evidence, but allow (per-task commits expected) |
+| verification | Block if no test or build evidence exists |
+| integration | Allow |

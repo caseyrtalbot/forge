@@ -24,7 +24,7 @@ function main() {
       process.exit(0);
     }
 
-    // Read current state and create updated copy (immutable pattern)
+    // Read current state and create updated copy with new session data
     const state = JSON.parse(fs.readFileSync(statePath, "utf-8"));
 
     const updated = {
@@ -33,8 +33,10 @@ function main() {
       session_count: (state.session_count || 0) + 1,
     };
 
-    // Write updated state
-    fs.writeFileSync(statePath, JSON.stringify(updated, null, 2), "utf-8");
+    // Write updated state atomically (tmp + rename)
+    const tmpPath = statePath + ".tmp";
+    fs.writeFileSync(tmpPath, JSON.stringify(updated, null, 2), "utf-8");
+    fs.renameSync(tmpPath, statePath);
 
     process.stderr.write("[Forge] Session state saved.\n");
     process.exit(0);

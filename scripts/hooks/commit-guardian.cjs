@@ -52,14 +52,10 @@ function main() {
     // During other phases, allow commits (docs, specs, plans)
     if (phase === "execution") {
       // Check for test evidence
-      const testEvidence = path.join(
-        cwd,
-        ".forge",
-        "evidence",
-        "verification",
-        "test-results.txt"
-      );
-      if (!fs.existsSync(testEvidence)) {
+      const execEvidenceDir = path.join(cwd, ".forge", "evidence", "verification");
+      const hasExecTestEvidence = fs.existsSync(execEvidenceDir) &&
+        fs.readdirSync(execEvidenceDir).some(f => f.startsWith("test-results"));
+      if (!hasExecTestEvidence) {
         // Warn but do not block during execution (per-task commits are expected)
         process.stderr.write(
           "[Forge] Commit guardian: no test evidence found. Consider running tests before committing.\n"
@@ -75,10 +71,13 @@ function main() {
         "evidence",
         "verification"
       );
-      const hasTestResults =
-        fs.existsSync(path.join(evidenceDir, "test-results.txt"));
-      const hasBuildResults =
-        fs.existsSync(path.join(evidenceDir, "build-results.txt"));
+      let hasTestResults = false;
+      let hasBuildResults = false;
+      if (fs.existsSync(evidenceDir)) {
+        const files = fs.readdirSync(evidenceDir);
+        hasTestResults = files.some(f => f.startsWith("test-results"));
+        hasBuildResults = files.some(f => f.startsWith("build-results"));
+      }
 
       if (!hasTestResults && !hasBuildResults) {
         const output = JSON.stringify({
