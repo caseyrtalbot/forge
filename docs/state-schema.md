@@ -12,7 +12,7 @@
 | total_tasks | number | Total tasks in the plan (set during planning) |
 | current_task | number | Index of the currently active task |
 | tasks | object[] | Array of task objects with status fields |
-| evidence | object | Map of phase to collected evidence paths |
+| evidence | object | Reserved for future use. Evidence is currently tracked by file presence in `.forge/evidence/` |
 | session_count | number | Number of sessions this workflow has spanned |
 | last_session | string | ISO timestamp of the last session |
 | created_at | string | ISO timestamp of workflow creation |
@@ -23,7 +23,7 @@
 - Read by `session-init` hook at session start to inject context
 - Read by `phase-gate` hook to enforce phase-appropriate tool access
 - Read by `commit-guardian` hook to validate evidence before commits
-- Updated by `evidence-collector` hook when test/build output is captured
+- Evidence tracked via file presence in `.forge/evidence/` (written by `evidence-collector` hook, checked by `commit-guardian`)
 - Updated by `session-capture` hook at session end (increments session_count, updates last_session)
 - Updated by `/forge:advance` when phase transitions occur
 

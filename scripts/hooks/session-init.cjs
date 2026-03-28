@@ -9,8 +9,7 @@ const path = require("path");
 
 function main() {
   try {
-    // Check runtime profile
-    const profile = process.env.FORGE_HOOK_PROFILE || "standard";
+    // Check if this hook is disabled
     const disabled = (process.env.FORGE_DISABLED_HOOKS || "").split(",");
     if (disabled.includes("session-init")) {
       process.exit(0);

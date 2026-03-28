@@ -119,7 +119,7 @@ Two additional skills work across all phases:
 | `phase-gate` | PreToolUse (Write/Edit) | Block code edits during pre-execution phases |
 | `evidence-collector` | PostToolUse (Bash) | Capture test/build output as evidence |
 | `commit-guardian` | PreToolUse (Bash) | Validate verification before commits |
-| `session-capture` | Stop | Save state for cross-session continuity |
+| `session-capture` | SessionEnd | Save state for cross-session continuity |
 
 ### 4 Commands
 
