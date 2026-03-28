@@ -24,10 +24,10 @@ Follow the phase order: Discovery > Design > Planning > Execution > Verification
 ## Installation
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/forge-workflow/forge/main/.codex/AGENTS.md
+Fetch and follow instructions from https://raw.githubusercontent.com/caseyrtalbot/forge/main/.codex/AGENTS.md
 ```
 
 Then clone the repo and reference skills directly:
 ```bash
-git clone https://github.com/forge-workflow/forge.git ~/.codex/forge
+git clone https://github.com/caseyrtalbot/forge.git ~/.codex/forge
 ```

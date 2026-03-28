@@ -1,3 +1,7 @@
+---
+name: advance
+description: "Check gate conditions for the current phase and advance to the next phase if all pass."
+---
 Check all gate conditions for the current phase and advance to the next phase if they pass.
 
 ## Usage

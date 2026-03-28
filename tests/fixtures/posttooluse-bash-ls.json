@@ -1,0 +1,14 @@
+{
+  "session_id": "test-123",
+  "cwd": "/tmp/test-project",
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "ls -la"
+  },
+  "tool_response": {
+    "stdout": "total 8\ndrwxr-xr-x  3 user  staff  96 Mar 27 10:00 .\n",
+    "stderr": "",
+    "exitCode": 0
+  }
+}

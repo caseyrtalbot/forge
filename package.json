@@ -10,5 +10,8 @@
     "evidence-gates",
     "claude-code",
     "plugin"
-  ]
+  ],
+  "scripts": {
+    "test": "node tests/run-tests.cjs"
+  }
 }

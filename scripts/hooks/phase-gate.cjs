@@ -23,14 +23,14 @@ function main() {
     // Read stdin for tool input
     let input = "";
     try {
-      input = fs.readFileSync("/dev/stdin", "utf-8");
+      input = fs.readFileSync(0, "utf-8");
     } catch {
       // No stdin available, allow
       process.exit(0);
     }
 
     const toolInput = JSON.parse(input);
-    const filePath = toolInput.file_path || toolInput.path || "";
+    const filePath = toolInput.tool_input?.file_path || toolInput.tool_input?.path || "";
 
     // Only gate code files, not docs/specs/plans/configs
     const docPatterns = [
@@ -67,12 +67,15 @@ function main() {
     const blockedPhases = ["discovery", "design", "planning"];
     if (blockedPhases.includes(phase)) {
       // Exit code 2 = block with message
-      const msg = JSON.stringify({
-        decision: "block",
-        reason: `[Forge] Phase gate: code edits are not allowed during the ${phase} phase. Complete ${phase} first, then advance to execution.`,
+      const output = JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: "PreToolUse",
+          permissionDecision: "deny",
+          permissionDecisionReason: `[Forge] Phase gate: code edits are not allowed during the ${phase} phase. Complete ${phase} first, then advance to execution.`
+        }
       });
-      process.stdout.write(msg);
-      process.exit(2);
+      process.stdout.write(output);
+      process.exit(0);
     }
 
     // Allow in execution, verification, integration phases

@@ -1,3 +1,7 @@
+---
+name: status
+description: "Show current Forge workflow phase, progress, and pending gates."
+---
 Show the current Forge workflow status including active phase, completed phases, pending gates, and task progress.
 
 ## Usage

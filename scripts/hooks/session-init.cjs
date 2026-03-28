@@ -31,7 +31,7 @@ function main() {
     const totalTasks = state.total_tasks || 0;
     const currentTask = state.current_task || 0;
 
-    // Build status message for stderr (informational, does not block)
+    // Build status message for Claude's context via stdout
     const lines = [
       "[Forge] Active workflow detected",
       `  Phase: ${phase}`,
@@ -46,7 +46,10 @@ function main() {
       lines.push(`  Workflow: ${state.workflow_id}`);
     }
 
-    process.stderr.write(lines.join("\n") + "\n");
+    const context = JSON.stringify({
+      additionalContext: lines.join("\n")
+    });
+    process.stdout.write(context);
     process.exit(0);
   } catch (err) {
     // Graceful failure: log warning, never block

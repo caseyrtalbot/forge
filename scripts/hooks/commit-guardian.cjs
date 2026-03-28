@@ -23,13 +23,13 @@ function main() {
     // Read stdin for tool input
     let input = "";
     try {
-      input = fs.readFileSync("/dev/stdin", "utf-8");
+      input = fs.readFileSync(0, "utf-8");
     } catch {
       process.exit(0);
     }
 
     const toolInput = JSON.parse(input);
-    const command = toolInput.command || "";
+    const command = toolInput.tool_input?.command || "";
 
     // Only intercept git commit commands
     if (!/git\s+commit/i.test(command)) {
@@ -81,13 +81,15 @@ function main() {
         fs.existsSync(path.join(evidenceDir, "build-results.txt"));
 
       if (!hasTestResults && !hasBuildResults) {
-        const msg = JSON.stringify({
-          decision: "block",
-          reason:
-            "[Forge] Commit guardian: verification phase requires test or build evidence before committing. Run your test suite first.",
+        const output = JSON.stringify({
+          hookSpecificOutput: {
+            hookEventName: "PreToolUse",
+            permissionDecision: "deny",
+            permissionDecisionReason: "[Forge] Commit guardian: verification phase requires test or build evidence before committing. Run your test suite first."
+          }
         });
-        process.stdout.write(msg);
-        process.exit(2);
+        process.stdout.write(output);
+        process.exit(0);
       }
     }
 

@@ -16,7 +16,7 @@ Forge treats software construction as a series of earned progressions. Each phas
 
 ## Why Forge Instead of Rules
 
-You can write rules in CLAUDE.md that say "write tests first" and "review code before committing." But rules are suggestions. The agent reads them, agrees with them, and then skips them when it feels confident. Forge enforces workflow through hooks that intercept tool use (blocking code edits during design phases, requiring test evidence before commits), skills that chain with hard gates (no code before an approved spec, no completion claims without executed output), and state tracking that persists across sessions. The difference between a rule and Forge is the difference between a suggestion and a gate.
+You can write rules in CLAUDE.md that say "write tests first" and "review code before committing." But rules are suggestions. The agent reads them, agrees with them, and then skips them when it feels confident. Forge enforces workflow through hooks that intercept tool use (the `phase-gate` hook blocks code edits during pre-execution phases by reading `.forge/forge-state.json`; the `commit-guardian` hook requires test evidence before commits), skills that document the expected workflow graph and gate conditions for the agent to follow, and state tracking that persists across sessions. The difference between a rule and Forge is the difference between a suggestion and a gate.
 
 ## Prerequisites
 
@@ -30,14 +30,14 @@ You can write rules in CLAUDE.md that say "write tests first" and "review code b
 
 ```bash
 # From the Claude Code plugin marketplace (when published)
-/plugin marketplace add forge-workflow/forge
-/plugin install forge@forge-workflow
+/plugin marketplace add caseyrtalbot/forge
+/plugin install forge@caseyrtalbot
 ```
 
 Or install from a local clone:
 
 ```bash
-git clone https://github.com/forge-workflow/forge.git
+git clone https://github.com/caseyrtalbot/forge.git
 /plugin install ./forge
 ```
 

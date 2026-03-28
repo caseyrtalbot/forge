@@ -58,8 +58,8 @@ digraph drive_execution {
 
 1. **Read the plan document** and understand all tasks, their order, and dependencies
 2. **Deploy the dependency-mapper agent** to trace the impact of planned changes across the codebase. Use the impact analysis to anticipate side effects before implementation begins.
-2. **Initialize workflow state** -- update `.forge/forge-state.json` with current phase, total tasks, and task statuses
-3. **For each task (in dependency order)**:
+3. **Initialize workflow state** -- update `.forge/forge-state.json` with current phase, total tasks, and task statuses
+4. **For each task (in dependency order)**:
    a. Verify all dependency tasks are complete
    b. Prepare task context: task description, relevant spec sections, file paths, verification criteria
    c. Dispatch a fresh **implementer** subagent with the task context
@@ -68,9 +68,9 @@ digraph drive_execution {
    f. If review raises concerns, dispatch the implementer again with the feedback
    g. When review passes, mark the task complete in workflow state
    h. Run the task's verification command to confirm
-4. **Identify parallel opportunities** -- if independent tasks exist, dispatch multiple implementers concurrently
-5. **Update progress** after each task -- track completed/total in `.forge/forge-state.json`
-6. **When all tasks complete**, invoke **confirm-complete** for end-to-end verification
+5. **Identify parallel opportunities** -- if independent tasks exist, dispatch multiple implementers concurrently
+6. **Update progress** after each task -- track completed/total in `.forge/forge-state.json`
+7. **When all tasks complete**, invoke **confirm-complete** for end-to-end verification
 
 ## Subagent Context Template
 

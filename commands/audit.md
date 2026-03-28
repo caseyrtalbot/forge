@@ -1,3 +1,7 @@
+---
+name: audit
+description: "Run comprehensive quality, security, and completeness audit on current work."
+---
 Run a comprehensive quality, security, and completeness audit on the current work.
 
 ## Usage

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-// Forge: Session Capture Hook (Stop)
+// Forge: Session Capture Hook (SessionEnd)
 // Saves current workflow state for cross-session continuity.
-// Runs async so it does not delay the session ending.
+// Runs synchronously to ensure state is written before process exits.
 // Uses FORGE_HOOK_PROFILE to determine if this hook should run.
 
 const fs = require("fs");

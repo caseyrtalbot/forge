@@ -1,3 +1,7 @@
+---
+name: start
+description: "Initiate a new Forge workflow. Creates .forge/ state and begins the discovery phase."
+---
 Initiate a new Forge workflow. Checks for existing workflow state in `.forge/`, creates a new workflow if none exists, and activates the discover-intent skill to begin collaborative refinement of what to build.
 
 ## Usage

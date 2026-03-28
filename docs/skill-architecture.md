@@ -9,14 +9,16 @@ Every Forge skill uses this YAML frontmatter:
 name: <kebab-case-identifier>       # Must match directory name
 description: "<trigger text>"        # When to activate this skill
 phase: <discovery|design|planning|execution|verification|integration|any>
-transitions:                         # What skills come next
+transitions:                         # Human-readable documentation of what skills come next
   - target: <skill-name>
     condition: "<when this transition fires>"
-gates:                               # Evidence required before progression
+gates:                               # Human-readable documentation of entry/exit conditions
   entry: "<what must be true to start>"
   exit: "<what must be true to finish>"
 ---
 ```
+
+> **Note on frontmatter vs. enforcement**: The `phase`, `transitions`, and `gates` fields are descriptive metadata. They document the intended workflow graph and gate conditions for human readers and the agent. They do not enforce anything on their own. Actual enforcement comes from the hook layer: the `phase-gate` hook reads `.forge/forge-state.json` and blocks tool use based on the current phase; the `commit-guardian` hook validates that evidence requirements are met before allowing commits.
 
 ## Skill Body Structure
 

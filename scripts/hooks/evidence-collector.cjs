@@ -23,14 +23,14 @@ function main() {
     // Read stdin for tool result
     let input = "";
     try {
-      input = fs.readFileSync("/dev/stdin", "utf-8");
+      input = fs.readFileSync(0, "utf-8");
     } catch {
       process.exit(0);
     }
 
     const toolResult = JSON.parse(input);
-    const command = toolResult.command || toolResult.input?.command || "";
-    const output = toolResult.output || toolResult.stdout || "";
+    const command = toolResult.tool_input?.command || "";
+    const output = toolResult.tool_response?.stdout || toolResult.tool_response?.output || "";
 
     // Only capture evidence for test/build commands
     const testPatterns = [

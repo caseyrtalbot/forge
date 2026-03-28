@@ -1,0 +1,14 @@
+{
+  "session_id": "test-123",
+  "cwd": "/tmp/test-project",
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "npm test"
+  },
+  "tool_response": {
+    "stdout": "PASS src/index.test.ts\n  Tests: 5 passed, 5 total",
+    "stderr": "",
+    "exitCode": 0
+  }
+}

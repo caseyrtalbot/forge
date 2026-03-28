@@ -2,11 +2,11 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|clear|compact",
+        "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-init.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-init.cjs\"",
             "timeout": 15
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/phase-gate.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/phase-gate.cjs\"",
             "timeout": 15
           }
         ],
@@ -29,7 +29,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/commit-guardian.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/commit-guardian.cjs\"",
             "timeout": 15
           }
         ],
@@ -42,22 +42,21 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/evidence-collector.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/evidence-collector.cjs\"",
             "timeout": 15
           }
         ],
         "description": "Captures test results and build outputs as verification evidence"
       }
     ],
-    "Stop": [
+    "SessionEnd": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-capture.js\"",
-            "timeout": 15,
-            "async": true
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session-capture.cjs\"",
+            "timeout": 15
           }
         ],
         "description": "Saves workflow state for cross-session continuity"
