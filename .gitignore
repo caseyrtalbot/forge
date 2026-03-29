@@ -2,3 +2,9 @@ node_modules/
 .forge/
 *.log
 .DS_Store
+.env*
+*.tgz
+*.swp
+*.swo
+.idea/
+.vscode/
