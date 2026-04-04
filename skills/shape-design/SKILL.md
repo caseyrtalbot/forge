@@ -1,6 +1,7 @@
 ---
 name: shape-design
 description: "Use when an approved direction exists and a spec document is needed. Creates architecture, data flow, edge cases, and error handling documentation. Phase: DESIGN."
+context: fork
 phase: design
 transitions:
   - target: chart-tasks

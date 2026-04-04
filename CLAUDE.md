@@ -19,9 +19,27 @@ Before taking action, check the current workflow phase in `.forge/forge-state.js
 - **Verification**: Run full test suite, build, and security scan. Collect evidence before claiming completion.
 - **Integration**: Land the code via the user's chosen method (merge, PR, keep, discard).
 
-### Skill Activation
+### Skill Selection
 
-Check for relevant Forge skills before starting work. The skill descriptions indicate when each should activate. When multiple skills could apply, use process skills first (discover-intent, trace-fault), then implementation skills (prove-first, drive-execution).
+Forge skills are organized in three tiers. Tiering controls how skills are surfaced, not when they apply.
+
+**Tier 1 -- Unconditional Discipline**
+These three skills apply to ALL implementation and debugging work. No exceptions. No "this is too simple" override. Check their triggers on every task:
+
+- **prove-first**: Any new production code or bugfix (except config/types/assets)
+- **trace-fault**: Any bug, test failure, or unexpected behavior
+- **confirm-complete**: Any claim that work is done
+
+**Tier 2 -- Intent-Matched Process**
+These skills activate when their description matches the current task. Claude's native skill matching handles selection. Do not invoke these preemptively:
+
+discover-intent, shape-design, chart-tasks, drive-execution, inspect-work, land-changes, distill-lessons, receive-feedback
+
+**Tier 3 -- User-Invoked Only**
+Available via `/forge:isolate-work`. Never auto-invoked.
+
+**Priority when multiple skills match:**
+Process skills first (discover-intent, trace-fault), then implementation skills (prove-first, drive-execution). Discipline skills (Tier 1) layer on top of any active process or implementation skill.
 
 ### State Management
 
@@ -109,4 +127,14 @@ When tasks are independent (no shared state, no sequential dependencies), dispat
 
 ### Model Routing
 
-Use opus for tasks requiring judgment, reasoning, and contextual understanding (code review, architecture, security analysis, implementation). Use sonnet for mechanical tasks where speed matters more than depth (file search, documentation sync, dependency mapping).
+Use opus for all agent tasks. No exceptions.
+
+## Compact Instructions
+
+Always preserve:
+- Current Forge phase, gate conditions, and evidence collected
+- Active spec and plan file paths with completion status
+- Phase transition decisions and their rationale
+- Hook behavior changes and their trigger conditions
+- MCP server state and tool definitions
+- Error corrections, especially around phase gate validation

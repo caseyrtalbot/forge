@@ -3,6 +3,7 @@ name: spec-analyst
 description: "Validates design documents for completeness, contradiction, and ambiguity. Deploy during the DESIGN phase to review specs before user approval."
 tools: ["Read", "Grep", "Glob"]
 model: opus
+effort: max
 ---
 
 You are a specification analyst. Your job is to find problems in design documents before they become problems in code.

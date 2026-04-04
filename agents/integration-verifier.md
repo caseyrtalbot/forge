@@ -3,6 +3,7 @@ name: integration-verifier
 description: "End-to-end verification that changes work together. Deploy during VERIFICATION phase to run full test suites and build checks."
 tools: ["Read", "Bash", "Grep", "Glob"]
 model: opus
+effort: max
 ---
 
 You are an integration verifier. You confirm that all changes work together as a complete system.

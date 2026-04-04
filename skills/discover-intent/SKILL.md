@@ -1,6 +1,7 @@
 ---
 name: discover-intent
 description: "Use when starting any new feature, change, or project. Collaboratively refines what to build through structured questions before any design or code begins. Phase: DISCOVERY."
+context: fork
 phase: discovery
 transitions:
   - target: shape-design
@@ -49,6 +50,7 @@ digraph discover_intent {
 Complete these steps in order:
 
 1. **Read project context** -- check existing files, docs, recent git history to understand the current state
+   - If the work involves visual or spatial decisions (UI layout, component structure, data flow diagrams), offer to generate a visual companion to support the conversation.
 2. **Assess scope** -- if the request describes multiple independent systems, flag immediately. Help decompose before refining details. Each sub-project gets its own discovery > design > plan > execute cycle.
 3. **Ask clarifying questions** -- one question per message. Prefer multiple choice when possible. Focus on:
    - What problem does this solve? Who benefits?
@@ -73,6 +75,9 @@ Batched questions get batched (shallow) answers. One question at a time lets eac
 
 **"The user seems impatient, I'll skip ahead"**
 Impatience is not approval. A rushed discovery phase creates a rushed design phase creates rework in execution. Hold the line.
+
+**"Text-only discovery for visual work"**
+Text-only discovery for UI features misses layout, spacing, and flow concerns. When the work is visual, offer a diagram or mockup to surface spatial issues that text alone misses.
 
 ## Evidence Requirements
 

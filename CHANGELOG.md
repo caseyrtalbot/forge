@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.0.0 - 2026-04-04
+
+### Consolidated
+- Absorbed uniquely valuable content from superpowers plugin
+- prove-first: Iron Law, rationalization resistance, red flags, verification checklist
+- trace-fault: Architecture questioning escalation, defense-in-depth, condition-based-waiting, parallel investigation techniques
+- confirm-complete: Common failures table, fresh-execution requirement, honesty framing
+- inspect-work: Re-review loop with fix-and-verify cycles, reviewer prompt templates
+- chart-tasks: Forbidden placeholders, atomic step granularity (2-5 min)
+- drive-execution: Implementer status handling (DONE/CONCERNS/CONTEXT/BLOCKED), parallel dispatch guidance
+- discover-intent: Visual companion concept (infrastructure deferred)
+
+### Added
+- `receive-feedback` skill: Code review receiving framework with pushback protocol
+- `isolate-work` skill: Git worktree management with safety verification (user-invoked only)
+- Supporting reference files for prove-first, trace-fault, inspect-work, chart-tasks
+- Dynamic skill routing in CLAUDE.md (three-tier system replaces superpowers' 1% rule)
+- Implementer status reporting, escalation protocol, and self-review checklist
+
+### Fixed
+- Removed dangling superpowers references in implementer.md and quality-auditor.md
+
+### Removed
+- Dependency on superpowers plugin (all valuable content now in forge)
+
 ## 1.0.0
 
 Initial release of Forge.

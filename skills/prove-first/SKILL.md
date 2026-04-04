@@ -1,6 +1,6 @@
 ---
 name: prove-first
-description: "Use during implementation of any feature or bugfix. Enforces test-first development: write the failing test, then write the code. Phase: EXECUTION."
+description: "Write failing test before any production code. Red-green-refactor for all features and fixes. No exceptions except config, types, and static assets."
 phase: execution
 transitions:
   - target: inspect-work
@@ -17,6 +17,8 @@ Write the test before writing the code. Watch the test fail. Write the minimal c
 <HARD-GATE>
 NO implementation code without a failing test first.
 
+This is the Iron Law of prove-first. There are no exceptions worth discussing.
+
 Wrote code before the test? Delete it. Do not keep it as "reference." Do not "adapt" it. Do not look at it while writing the test. Delete means delete. Start with the test.
 
 The only exceptions are:
@@ -25,6 +27,17 @@ The only exceptions are:
 - Static assets (images, fonts, etc.)
 Everything else gets a test first.
 </HARD-GATE>
+
+## Red Flags
+
+If any of these are true, you have gone off track. Stop and course-correct:
+
+- **Test passes on first run** -- you are testing existing behavior, not new behavior. Fix the test.
+- **Cannot explain why the test fails** -- you do not understand the requirement. Go back to the task description.
+- **Multiple test failures you cannot explain** -- you are changing too much at once. Revert and take smaller steps.
+- **Feeling tempted to "just get it working first"** -- that is rationalization. The test comes first. Always.
+- **Code exists before any test file** -- you skipped the discipline entirely. Delete the code. Start over.
+- **Test mirrors the implementation instead of the requirement** -- you wrote the test after or while looking at the code. Delete both.
 
 ## Process Flow
 
@@ -81,6 +94,8 @@ If you cannot describe the expected behavior without seeing the code, you do not
 
 **"I'll keep the code I already wrote"**
 Sunk cost. Code written without a test has no proof of correctness. It may be right. It may be subtly wrong in ways you will discover in production. Delete it.
+
+For the full rationalization table (15 common excuses and their rebuttals), see `rationalization-table.md`. For extended Iron Law guidance including the verification checklist and delete-and-start-over protocol, see `iron-law.md`.
 
 ## Evidence Requirements
 

@@ -1,6 +1,7 @@
 ---
 name: trace-fault
-description: "Use when encountering any bug, test failure, or unexpected behavior. Systematic root cause analysis with hypothesis tracking before proposing fixes."
+description: "Systematic root cause analysis before proposing fixes. Reproduce, hypothesize, test, document. Three failed fixes means question the architecture."
+context: fork
 phase: any
 transitions:
   - target: prove-first
@@ -41,7 +42,13 @@ digraph trace_fault {
     "Design test for hypothesis" -> "Run test";
     "Run test" -> "Hypothesis confirmed?";
     "Hypothesis confirmed?" -> "Root cause documented" [label="yes"];
-    "Hypothesis confirmed?" -> "Form hypothesis" [label="no, next hypothesis"];
+    "Hypothesis confirmed?" -> "3+ hypotheses denied?" [label="no"];
+    "3+ hypotheses denied?" [shape=diamond];
+    "3+ hypotheses denied?" -> "Form hypothesis" [label="no, next hypothesis"];
+    "3+ hypotheses denied?" -> "Question architecture" [label="yes"];
+    "Question architecture" [shape=box];
+    "Question architecture" -> "Present to user" [label="architectural concern"];
+    "Present to user" [shape=doublecircle];
     "Root cause documented" -> "Design fix";
     "Design fix" -> "Invoke prove-first";
 }
@@ -100,6 +107,18 @@ Fixing the test instead of the code means the bug is still there but the alarm i
 
 **"It works now, not sure why"**
 If you cannot explain why the fix works, you have not found the root cause. You have found a coincidence. Investigate until you can explain the causal chain.
+
+## Escalation
+
+After 3 failed fix attempts on the same bug, STOP. The bug may be architectural. Ask:
+- Is the abstraction wrong?
+- Is the data model forcing a workaround?
+- Is the coupling too tight?
+- Does each fix reveal a new problem in a different place?
+
+Present the architectural concern to the user before attempting a 4th fix. This is not giving up. This is recognizing that repeated symptom-level fixes on an architectural problem will never converge.
+
+For advanced investigation techniques (defense-in-depth, condition-based-waiting, parallel investigation, architecture questioning), see `techniques.md`.
 
 ## Evidence Requirements
 

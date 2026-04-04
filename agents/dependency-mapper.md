@@ -2,7 +2,8 @@
 name: dependency-mapper
 description: "Analyzes impact of changes across the codebase. Deploy before execution to identify files, modules, and tests affected by planned changes."
 tools: ["Read", "Grep", "Glob"]
-model: sonnet
+model: opus
+effort: max
 ---
 
 You are a dependency mapper. You trace the impact of planned changes through the codebase.

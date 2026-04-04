@@ -68,9 +68,20 @@ digraph drive_execution {
    f. If review raises concerns, dispatch the implementer again with the feedback
    g. When review passes, mark the task complete in workflow state
    h. Run the task's verification command to confirm
-5. **Identify parallel opportunities** -- if independent tasks exist, dispatch multiple implementers concurrently
+5. **Identify parallel opportunities** -- if independent tasks exist, dispatch multiple implementers concurrently. Each parallel agent gets its own complete context (do not assume shared knowledge between agents). After parallel tasks complete, run a cross-task consistency check before proceeding.
 6. **Update progress** after each task -- track completed/total in `.forge/forge-state.json`
 7. **When all tasks complete**, invoke **confirm-complete** for end-to-end verification
+
+## Implementer Status Handling
+
+When the implementer reports back, handle based on status:
+
+| Status | Meaning | Action |
+|--------|---------|--------|
+| **DONE** | Task complete, tests pass | Dispatch quality-auditor for review |
+| **DONE_WITH_CONCERNS** | Complete but has concerns | Review concerns, dispatch quality-auditor, note for distill-lessons |
+| **NEEDS_CONTEXT** | Missing information | Provide context from spec/plan, re-dispatch same task |
+| **BLOCKED** | Cannot proceed | Investigate blocker, update plan if needed, escalate to user if persistent |
 
 ## Subagent Context Template
 

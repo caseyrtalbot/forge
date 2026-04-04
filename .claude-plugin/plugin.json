@@ -1,7 +1,7 @@
 {
   "name": "forge",
-  "version": "1.0.0",
-  "description": "Phase-locked development workflow plugin. Enforces earned progression through discovery, design, planning, execution, verification, and integration with evidence gates at every transition.",
+  "version": "2.0.0",
+  "description": "Phase-locked development workflow with test-first discipline, evidence-gated verification, and dynamic skill routing.",
   "author": {
     "name": "Forge Contributors"
   },

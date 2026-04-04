@@ -1,6 +1,7 @@
 ---
 name: inspect-work
-description: "Use after task completion to review code against the plan. Multi-dimensional review covering spec compliance, code quality, and security. Phase: VERIFICATION."
+description: "Multi-stage review with re-review loops. Spec compliance first, then code quality, then security. Issues must be fixed and re-reviewed before proceeding."
+context: fork
 phase: verification
 transitions:
   - target: drive-execution
@@ -33,6 +34,10 @@ digraph inspect_work {
     "Security passes?" [shape=diamond];
     "Report: all clear" [shape=doublecircle];
     "Report: issues found" [shape=box];
+    "Implementer fixes" [shape=box];
+    "Re-review fixed items" [shape=box];
+    "3 loops exceeded?" [shape=diamond];
+    "Escalate to drive-execution" [shape=box];
 
     "Read task spec + diff" -> "Stage 1: Spec compliance";
     "Stage 1: Spec compliance" -> "Spec passes?";
@@ -44,6 +49,13 @@ digraph inspect_work {
     "Stage 3: Security scan" -> "Security passes?";
     "Security passes?" -> "Report: all clear" [label="yes"];
     "Security passes?" -> "Report: issues found" [label="no"];
+    "Report: issues found" -> "Implementer fixes";
+    "Implementer fixes" -> "Re-review fixed items";
+    "Re-review fixed items" -> "3 loops exceeded?";
+    "3 loops exceeded?" -> "Escalate to drive-execution" [label="yes"];
+    "3 loops exceeded?" -> "Spec passes?" [label="no, spec stage"];
+    "3 loops exceeded?" -> "Quality passes?" [label="no, quality stage"];
+    "3 loops exceeded?" -> "Security passes?" [label="no, security stage"];
 }
 ```
 
@@ -68,6 +80,18 @@ digraph inspect_work {
 - Are secrets kept out of code?
 - Are authentication/authorization checks present where needed?
 - Are error messages safe (no internal details leaked)?
+
+## Re-Review Loop
+
+When a review stage finds issues, the implementer fixes them and the reviewer re-reviews. This is not optional.
+
+1. Reviewer reports issues with severity (Critical / Important / Suggestion)
+2. Critical: implementer MUST fix. Important: implementer SHOULD fix (can defer with written rationale). Suggestions: noted, no action required.
+3. After fixes: reviewer re-reviews ONLY the fixed items (not a full re-review)
+4. Loop repeats until no critical issues remain and all important items are fixed or acknowledged
+5. Maximum 3 loops per stage. After 3, escalate to drive-execution for human input.
+
+For reviewer prompt templates, see `reviewer-prompts.md`. For the full protocol, see `re-review-protocol.md`.
 
 ## Issue Severity
 

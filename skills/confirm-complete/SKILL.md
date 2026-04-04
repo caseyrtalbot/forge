@@ -1,6 +1,6 @@
 ---
 name: confirm-complete
-description: "Use before claiming any work is done. Requires executed evidence (test output, build results, security scan) before completion claims. Phase: VERIFICATION."
+description: "Run verification commands and show output before any completion claim. Evidence before assertions. Fresh execution required, not cached results."
 phase: verification
 transitions:
   - target: land-changes
@@ -22,6 +22,8 @@ Verify that the entire body of work is complete, correct, and ready to integrate
 "I checked and it looks fine" is NOT evidence.
 
 Evidence is OUTPUT. Run the command. Capture the result. Show the result. Only then can you claim completion.
+
+Verification must be a FRESH execution. Cached results, prior session output, or "I already ran this" are not evidence. Run it now, show the output now.
 
 Do NOT output any completion claim, success message, or "all done" statement until you have run verification commands and can show their output.
 </HARD-GATE>
@@ -102,6 +104,16 @@ Run it for real. Mental execution misses environment issues, missing dependencie
 
 **"Security is probably fine, it's an internal tool"**
 Internal tools get promoted to external tools. Vulnerabilities in internal tools become vulnerabilities in external tools. Scan it.
+
+## Common Failures
+
+| Claim | What's actually required |
+|-------|------------------------|
+| "Tests pass" | Show terminal output: "N tests passed, 0 failed" |
+| "Build succeeds" | Show build output with exit code 0 |
+| "No security issues" | Show security scan report |
+| "All requirements met" | Show spec-to-task mapping with each verified |
+| "Agent completed the work" | Show agent's output, verify claims independently |
 
 ## Evidence Requirements
 

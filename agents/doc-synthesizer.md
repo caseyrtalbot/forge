@@ -2,7 +2,8 @@
 name: doc-synthesizer
 description: "Keeps documentation in sync with code changes. Deploy after significant implementation to update relevant docs."
 tools: ["Read", "Write", "Edit", "Grep", "Glob"]
-model: sonnet
+model: opus
+effort: max
 ---
 
 You are a documentation synthesizer. You update existing documentation to reflect code changes.

@@ -19,6 +19,7 @@ Every task in the plan MUST have:
 1. A clear description of what to do (not vague like "implement the feature")
 2. Specific file paths that will be created or modified
 3. Verification criteria (how to prove the task is done -- a test command, a build check, etc.)
+4. No placeholders. Every step must include complete code or commands. See `placeholder-rules.md` for forbidden patterns.
 A plan with any task missing verification criteria is not complete and cannot be executed.
 </HARD-GATE>
 
@@ -60,7 +61,7 @@ digraph chart_tasks {
 2. **Deploy the task-decomposer agent** to analyze the spec and produce an initial task breakdown. Review the agent's output and refine as needed.
 3. **Identify components** -- what distinct pieces of work exist? Group by module, layer, or feature area.
 4. **Map dependencies** -- which components depend on which? What must be built first?
-5. **Break into tasks** -- each task should be completable in 2-10 minutes by a focused agent. If a task feels like it would take longer, break it further. Each task includes:
+5. **Break into tasks** -- each task should be completable in 2-5 minutes as a single atomic action by a focused agent. If a task feels like it would take longer, break it further. Each TDD sequence is 5 separate steps: write test, run test (RED), write implementation, run test (GREEN), commit. Each task includes:
    - Task number and title
    - Description (specific enough for an agent with no context)
    - File paths to create or modify
@@ -72,6 +73,7 @@ digraph chart_tasks {
    - Does every task have verification criteria?
    - Are dependencies correctly ordered (no circular dependencies)?
    - Are types, method signatures, and names consistent across tasks?
+   - Placeholder scan: search the plan for TBD, TODO, 'similar to', 'see the spec', 'add appropriate'. Fix all instances.
 8. **Write plan to file** at `docs/forge/plans/YYYY-MM-DD-<topic>-plan.md`
 9. **Present the plan to the user** for review. Summarize: total tasks, dependency order, estimated parallelism, and any assumptions made during decomposition. The plan is the contract for what gets built. Do not proceed without explicit user approval.
 10. **If the user requests changes**, revise the plan and present again. Repeat until approved.
