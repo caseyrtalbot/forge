@@ -128,6 +128,36 @@ fs.writeFileSync(
 const sessionInitDisabledDir = makeTempDir("session-init-disabled");
 writeState(sessionInitDisabledDir, { current_phase: "execution" });
 
+const executionWithFreshEvidenceDir = makeTempDir("execution-fresh-evidence");
+writeState(executionWithFreshEvidenceDir, { current_phase: "execution" });
+const execFreshEvidenceSubdir = path.join(
+  executionWithFreshEvidenceDir,
+  ".forge",
+  "evidence",
+  "verification"
+);
+fs.mkdirSync(execFreshEvidenceSubdir, { recursive: true });
+fs.writeFileSync(
+  path.join(execFreshEvidenceSubdir, "test-results-fresh.txt"),
+  "# Test Results\n10 passed, 0 failed",
+  "utf-8"
+);
+
+const executionWithStaleEvidenceDir = makeTempDir("execution-stale-evidence");
+writeState(executionWithStaleEvidenceDir, { current_phase: "execution" });
+const execStaleEvidenceSubdir = path.join(
+  executionWithStaleEvidenceDir,
+  ".forge",
+  "evidence",
+  "verification"
+);
+fs.mkdirSync(execStaleEvidenceSubdir, { recursive: true });
+const staleFile = path.join(execStaleEvidenceSubdir, "test-results-stale.txt");
+fs.writeFileSync(staleFile, "# Test Results\nOld run", "utf-8");
+// Set modification time to 2 hours ago
+const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+fs.utimesSync(staleFile, twoHoursAgo, twoHoursAgo);
+
 // ---------------------------------------------------------------------------
 // Phase Gate Tests
 // ---------------------------------------------------------------------------
@@ -391,19 +421,39 @@ test("phase-gate: skips in minimal profile", () => {
 // Commit Guardian Tests (continued): execution warning, verification allow
 // ---------------------------------------------------------------------------
 
-test("commit-guardian: warns during execution with no evidence", () => {
+test("commit-guardian: blocks during execution with no evidence", () => {
   const result = runHook(HOOKS.commitGuardian, {
     cwd: executionDir,
     stdin: readFixture("pretooluse-bash-git-commit.json"),
   });
   assert(result.status === 0, `Expected exit 0, got ${result.status}`);
   assert(
-    !/deny/.test(result.stdout),
-    `Expected no deny in stdout (should warn, not block), got: ${result.stdout}`
+    /permissionDecision.*deny/.test(result.stdout),
+    `Expected deny in stdout (no fresh evidence), got: ${result.stdout}`
   );
+});
+
+test("commit-guardian: blocks during execution with stale evidence", () => {
+  const result = runHook(HOOKS.commitGuardian, {
+    cwd: executionWithStaleEvidenceDir,
+    stdin: readFixture("pretooluse-bash-git-commit.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
   assert(
-    /no test evidence/i.test(result.stderr),
-    `Expected stderr to contain warning about no test evidence, got: ${result.stderr}`
+    /permissionDecision.*deny/.test(result.stdout),
+    `Expected deny in stdout (stale evidence), got: ${result.stdout}`
+  );
+});
+
+test("commit-guardian: allows during execution with fresh evidence", () => {
+  const result = runHook(HOOKS.commitGuardian, {
+    cwd: executionWithFreshEvidenceDir,
+    stdin: readFixture("pretooluse-bash-git-commit.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    !/deny/.test(result.stdout),
+    `Expected no deny in stdout (fresh evidence present), got: ${result.stdout}`
   );
 });
 

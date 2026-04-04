@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1 - 2026-04-04
+
+### Enhanced
+- commit-guardian: now blocks during execution phase without fresh test evidence (was warn-only)
+- Evidence freshness: test results older than 30 minutes are treated as stale
+- Per-task enforcement: since drive-execution requires per-task commits, blocking stale commits effectively enforces per-task testing
+
 ## 2.0.0 - 2026-04-04
 
 ### Consolidated

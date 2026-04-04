@@ -48,18 +48,34 @@ function main() {
     const state = JSON.parse(fs.readFileSync(statePath, "utf-8"));
     const phase = state.current_phase || "";
 
-    // During execution phase, check if the current task has been verified
-    // During other phases, allow commits (docs, specs, plans)
+    // During execution phase, require fresh test evidence before committing.
+    // "Fresh" = evidence file modified within the last 30 minutes.
+    // This enforces per-task testing: stale evidence from a prior task won't pass.
     if (phase === "execution") {
-      // Check for test evidence
       const execEvidenceDir = path.join(cwd, ".forge", "evidence", "verification");
-      const hasExecTestEvidence = fs.existsSync(execEvidenceDir) &&
-        fs.readdirSync(execEvidenceDir).some(f => f.startsWith("test-results"));
-      if (!hasExecTestEvidence) {
-        // Warn but do not block during execution (per-task commits are expected)
-        process.stderr.write(
-          "[Forge] Commit guardian: no test evidence found. Consider running tests before committing.\n"
-        );
+      const thirtyMinAgo = Date.now() - 30 * 60 * 1000;
+      let hasFreshEvidence = false;
+
+      if (fs.existsSync(execEvidenceDir)) {
+        const files = fs.readdirSync(execEvidenceDir);
+        hasFreshEvidence = files
+          .filter(f => f.startsWith("test-results"))
+          .some(f => {
+            const stat = fs.statSync(path.join(execEvidenceDir, f));
+            return stat.mtimeMs > thirtyMinAgo;
+          });
+      }
+
+      if (!hasFreshEvidence) {
+        const output = JSON.stringify({
+          hookSpecificOutput: {
+            hookEventName: "PreToolUse",
+            permissionDecision: "deny",
+            permissionDecisionReason: "[Forge] Commit guardian: execution phase requires fresh test evidence before committing. Run your test suite first. Evidence older than 30 minutes is considered stale."
+          }
+        });
+        process.stdout.write(output);
+        process.exit(0);
       }
     }
 
