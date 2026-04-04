@@ -1,3 +1,5 @@
+<div align="center">
+
 ```
     ███████╗ ██████╗ ██████╗  ██████╗ ███████╗
     ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝
@@ -5,121 +7,171 @@
     ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝
     ██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗
     ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
-         Casey's Claude Code Workflow
 ```
 
-Phase-locked development workflow for Claude Code. Enforces earned progression through discovery, design, planning, execution, verification, and integration with evidence gates at every transition.
+**Phase-locked development workflow for Claude Code**
 
-## What It Does
+Evidence gates. Test-first discipline. No shortcuts.
 
-Forge treats software construction as a series of earned progressions. Each phase of work must produce demonstrable evidence before the next phase unlocks. The agent cannot skip steps, cut corners, or claim completion without proof.
+[![Version](https://img.shields.io/badge/version-2.0.0-blue)]()
+[![Skills](https://img.shields.io/badge/skills-13-green)]()
+[![Agents](https://img.shields.io/badge/agents-9-green)]()
+[![Hooks](https://img.shields.io/badge/hooks-5-orange)]()
+[![License: MIT](https://img.shields.io/badge/license-MIT-gray)]()
 
-## Why Forge Instead of Rules
+</div>
 
-You can write rules in CLAUDE.md that say "write tests first" and "review code before committing." But rules are suggestions. The agent reads them, agrees with them, and then skips them when it feels confident. Forge enforces workflow through hooks that intercept tool use (the `phase-gate` hook blocks code edits during pre-execution phases by reading `.forge/forge-state.json`; the `commit-guardian` hook requires test evidence before commits), skills that document the expected workflow graph and gate conditions for the agent to follow, and state tracking that persists across sessions. The difference between a rule and Forge is the difference between a suggestion and a gate.
+---
 
-## Prerequisites
+## What Forge Does
 
-- **Claude Code** (v1.0.33 or later)
-- **Node.js** (v18 or later) -- required for hook scripts
-- **Git** -- required for version control workflows
+Forge treats software construction as a series of earned progressions. Each phase produces demonstrable evidence before the next phase unlocks. The agent cannot skip steps, cut corners, or claim completion without proof.
 
-## Quick Start
+**Rules are suggestions. Gates are enforcement.** You can write "always test first" in CLAUDE.md, and the agent will agree, then skip it when it feels confident. Forge intercepts tool use: the `phase-gate` hook blocks code edits during pre-execution phases, the `commit-guardian` requires test evidence before commits, and discipline skills resist rationalization under pressure. The difference between a rule and Forge is the difference between a suggestion and a wall.
 
-### Install
+## Workflow
+
+```mermaid
+stateDiagram-v2
+    direction LR
+
+    [*] --> Discovery
+    Discovery --> Design : direction approved
+    Design --> Planning : spec approved
+    Planning --> Execution : plan approved
+    Execution --> Verification : all tasks complete
+    Verification --> Integration : evidence collected
+    Integration --> [*] : code landed
+
+    state Execution {
+        direction TB
+        [*] --> ProveFail: write test
+        ProveFail --> Implement: RED confirmed
+        Implement --> ProvePass: run test
+        ProvePass --> Review: GREEN confirmed
+        Review --> [*]: approved
+        Review --> ProveFail: issues found
+    }
+
+    state Verification {
+        direction TB
+        [*] --> Tests
+        Tests --> Build
+        Build --> Security
+        Security --> SpecAudit
+        SpecAudit --> [*]: all pass
+    }
+```
+
+Each transition requires evidence. No phase advances on assertions alone.
+
+| Phase | Skill | Gate |
+|-------|-------|------|
+| **Discovery** | `discover-intent` | User approves direction |
+| **Design** | `shape-design` | Spec reviewed and approved |
+| **Planning** | `chart-tasks` | All tasks have verification criteria |
+| **Execution** | `drive-execution` + `prove-first` | All tasks pass test-first + review |
+| **Verification** | `inspect-work` + `confirm-complete` | Tests, build, security, spec coverage |
+| **Integration** | `land-changes` | User chooses merge/PR/keep/discard |
+
+## Skill Selection
+
+Forge uses a three-tier routing system instead of blanket invocation rules.
+
+**Tier 1 -- Unconditional.** These apply to all implementation and debugging work. No exceptions.
+
+| Skill | Trigger |
+|-------|---------|
+| `prove-first` | Any new production code or bugfix |
+| `trace-fault` | Any bug, test failure, or unexpected behavior |
+| `confirm-complete` | Any claim that work is done |
+
+**Tier 2 -- Intent-matched.** Activate when their description matches the task.
+
+`discover-intent` | `shape-design` | `chart-tasks` | `drive-execution` | `inspect-work` | `land-changes` | `distill-lessons` | `receive-feedback`
+
+**Tier 3 -- User-invoked.** Available via slash command, never auto-triggered.
+
+| Skill | Command |
+|-------|---------|
+| `isolate-work` | `/forge:isolate-work` |
+
+## Install
 
 ```bash
-# From the Claude Code plugin marketplace (when published)
-/plugin marketplace add caseyrtalbot/forge
-/plugin install forge@caseyrtalbot
+# Add the marketplace and install
+claude plugins marketplace add caseyrtalbot/claude-plugins
+claude plugins install forge@caseyrtalbot
 ```
 
-Or install from a local clone:
+Or from a local clone:
 
 ```bash
 git clone https://github.com/caseyrtalbot/forge.git
-/plugin install ./forge
+claude plugins install ./forge
 ```
 
-### First Use
+**Requirements:** Claude Code v1.0.33+, Node.js 18+, Git
+
+## Quick Start
 
 ```bash
-# Start a new workflow
-/forge:start "Add user authentication"
-
-# Check where you are
-/forge:status
-
-# Advance to next phase (checks gates)
-/forge:advance
-
-# Run a full audit
-/forge:audit
+/forge:start "Add user authentication"   # Begin a workflow
+/forge:status                             # Check current phase
+/forge:advance                            # Advance when gates pass
+/forge:audit                              # Run full quality audit
 ```
 
-### What to Expect
-
-After `/forge:start`, the agent enters the Discovery phase. It reads your project context, then asks you questions one at a time to understand what you want to build. Once you approve a direction, it moves to Design and creates a spec document for your review. After you approve the spec, it decomposes it into tasks with verification criteria, then executes them one by one with test-first discipline and per-task review. Finally, it runs verification checks (tests, build, security) and presents you with options to merge, create a PR, or keep the branch. The entire workflow is tracked in `.forge/forge-state.json` and survives across sessions.
-
-## The Workflow
-
-```
-Discovery --> Design --> Planning --> Execution --> Verification --> Integration
-```
-
-| Phase | Skill | What Happens |
-|-------|-------|-------------|
-| **Discovery** | `discover-intent` | Collaborative refinement of what to build |
-| **Design** | `shape-design` | Spec document with architecture, data flow, edge cases |
-| **Planning** | `chart-tasks` | Ordered tasks with verification criteria |
-| **Execution** | `drive-execution` + `prove-first` | Task-by-task implementation with test-first discipline |
-| **Verification** | `inspect-work` + `confirm-complete` | Three-stage review and evidence-based completion |
-| **Integration** | `land-changes` | Merge, PR, or keep with user consent |
-
-Two additional skills work across all phases:
-- **`trace-fault`** -- systematic debugging with hypothesis tracking
-- **`distill-lessons`** -- workflow retrospective (runs at completion)
+After `/forge:start`, the agent enters Discovery: reads project context, asks questions one at a time, refines what to build. Once you approve a direction, it moves through Design (spec), Planning (tasks), Execution (test-first implementation with per-task review), Verification (tests, build, security scan), and Integration (merge/PR). The entire workflow persists across sessions in `.forge/forge-state.json`.
 
 ## What's Inside
 
-### 10 Skills
+### 13 Skills
 
-| Skill | Phase | Purpose |
-|-------|-------|---------|
-| `discover-intent` | Discovery | Refine what to build through structured dialogue |
-| `shape-design` | Design | Create spec with self-review and user approval |
-| `chart-tasks` | Planning | Decompose spec into verified tasks |
-| `drive-execution` | Execution | Orchestrate fresh-agent-per-task implementation |
-| `prove-first` | Execution | Test-first development discipline |
-| `inspect-work` | Verification | Three-stage review: spec, quality, security |
-| `confirm-complete` | Verification | Evidence-based completion checking |
-| `land-changes` | Integration | Merge/PR with user consent |
-| `trace-fault` | Any | Hypothesis-driven debugging |
-| `distill-lessons` | Any | Workflow retrospective |
+| Skill | Phase | Purpose | Lines |
+|-------|-------|---------|-------|
+| `discover-intent` | Discovery | Refine what to build through structured dialogue | 89 |
+| `shape-design` | Design | Create spec with architecture, data flow, edge cases | 97 |
+| `chart-tasks` | Planning | Decompose spec into atomic tasks with verification | 113 |
+| `drive-execution` | Execution | Orchestrate fresh-agent-per-task with status handling | 124 |
+| `prove-first` | Execution | Test-first discipline with Iron Law enforcement | 108 |
+| `inspect-work` | Verification | Three-stage review with re-review loops | 126 |
+| `confirm-complete` | Verification | Evidence-based completion, fresh execution required | 128 |
+| `land-changes` | Integration | Merge/PR/keep/discard with user consent | 94 |
+| `trace-fault` | Any | Root cause analysis with architecture escalation | 132 |
+| `distill-lessons` | Any | Workflow retrospective | 89 |
+| `receive-feedback` | Any | Code review receiving with pushback framework | 120 |
+| `isolate-work` | Any | Git worktree management with safety verification | 98 |
+
+Every skill includes: HARD-GATE enforcement, dot process flow diagram, anti-patterns section, evidence requirements, and explicit transitions.
 
 ### 9 Agents
 
-| Agent | Model | Purpose |
+All agents run on Opus with max effort.
+
+| Agent | Tools | Purpose |
 |-------|-------|---------|
-| `spec-analyst` | opus | Validate specs for completeness and contradictions |
-| `task-decomposer` | opus | Break specs into executable tasks |
-| `implementer` | opus | Execute single tasks with test-first discipline |
-| `quality-auditor` | opus | Two-stage review: spec compliance + code quality |
-| `security-sentinel` | opus | OWASP-aware vulnerability scanning |
-| `test-strategist` | opus | Determine test needs and audit coverage |
-| `dependency-mapper` | sonnet | Trace change impact across codebase |
-| `integration-verifier` | opus | Run full test suite and build checks |
-| `doc-synthesizer` | sonnet | Keep docs in sync with code changes |
+| `spec-analyst` | Read, Grep, Glob | Validate specs for completeness and contradictions |
+| `task-decomposer` | Read, Grep, Glob | Break specs into independently executable tasks |
+| `dependency-mapper` | Read, Grep, Glob | Trace change impact across codebase |
+| `implementer` | Read, Write, Edit, Bash, Grep, Glob | Execute single tasks with test-first discipline |
+| `test-strategist` | Read, Grep, Glob, Bash | Determine test needs and audit coverage |
+| `quality-auditor` | Read, Grep, Glob, Bash | Two-stage review: spec compliance then code quality |
+| `security-sentinel` | Read, Grep, Glob, Bash | OWASP-aware vulnerability scanning |
+| `integration-verifier` | Read, Bash, Grep, Glob | Full test suite and build verification |
+| `doc-synthesizer` | Read, Write, Edit, Grep, Glob | Keep documentation in sync with code |
+
+The `implementer` agent reports structured status: **DONE**, **DONE_WITH_CONCERNS**, **NEEDS_CONTEXT**, or **BLOCKED**. The orchestrator (`drive-execution`) handles each status appropriately, including escalation for persistent blockers.
 
 ### 5 Hooks
 
-| Hook | Event | Purpose |
-|------|-------|---------|
-| `session-init` | SessionStart | Load workflow state, show status |
-| `phase-gate` | PreToolUse (Write/Edit) | Block code edits during pre-execution phases |
-| `evidence-collector` | PostToolUse (Bash) | Capture test/build output as evidence |
-| `commit-guardian` | PreToolUse (Bash) | Validate verification before commits |
-| `session-capture` | SessionEnd | Save state for cross-session continuity |
+| Hook | Event | Enforcement |
+|------|-------|-------------|
+| `session-init` | SessionStart | Load workflow state, display phase status |
+| `phase-gate` | PreToolUse (Write/Edit) | Block code edits during discovery/design/planning |
+| `evidence-collector` | PostToolUse (Bash) | Capture test and build output as evidence |
+| `commit-guardian` | PreToolUse (Bash) | Require verification evidence before git commits |
+| `session-capture` | SessionEnd | Persist state for cross-session continuity |
 
 ### 4 Commands
 
@@ -127,48 +179,72 @@ Two additional skills work across all phases:
 |---------|---------|
 | `/forge:start` | Initiate a new workflow |
 | `/forge:status` | Show current phase and progress |
-| `/forge:advance` | Check gates and progress to next phase |
+| `/forge:advance` | Check gates, advance to next phase |
 | `/forge:audit` | Run quality, security, and completeness audit |
 
-## Hook Runtime Profiles
+## Key Concepts
+
+### Evidence Gates
+
+Every phase transition requires proof. "Tests pass" requires terminal output showing pass counts. "Build succeeds" requires build output with exit code 0. "I checked and it looks fine" is not evidence.
+
+### The Iron Law
+
+No production code without a failing test first. Exceptions: configuration files, type definitions, static assets. Everything else gets a test. Code written before the test gets deleted. See `skills/prove-first/rationalization-table.md` for the 15 most common excuses and their rebuttals.
+
+### Re-Review Loops
+
+When `inspect-work` finds issues, the implementer fixes them and the reviewer re-reviews. Not optional. Spec compliance must pass before code quality review begins. Maximum 3 loops per stage before escalating to the user.
+
+### Architecture Escalation
+
+After 3 failed fix attempts on the same bug, `trace-fault` stops attempting fixes and questions the architecture. Is the abstraction wrong? Is the data model forcing a workaround? This prevents infinite cycles of symptom treatment.
+
+### Receive and Push Back
+
+`receive-feedback` requires verifying review suggestions against the actual codebase before implementing. Performative agreement ("You're absolutely right!") is forbidden. If a suggestion is wrong, push back with evidence.
+
+## Hook Profiles
 
 Control hook strictness via environment variable:
 
 ```bash
-# Minimal: only session lifecycle hooks
-export FORGE_HOOK_PROFILE=minimal
+export FORGE_HOOK_PROFILE=minimal    # Only session lifecycle
+export FORGE_HOOK_PROFILE=standard   # All hooks (default)
 
-# Standard: all hooks (default)
-export FORGE_HOOK_PROFILE=standard
-
-# Disable specific hooks
-export FORGE_DISABLED_HOOKS=phase-gate,commit-guardian
+export FORGE_DISABLED_HOOKS=phase-gate,commit-guardian  # Disable specific hooks
 ```
+
+## File Conventions
+
+| Artifact | Location |
+|----------|----------|
+| Specs | `docs/forge/specs/YYYY-MM-DD-<topic>-design.md` |
+| Plans | `docs/forge/plans/YYYY-MM-DD-<topic>-plan.md` |
+| Evidence | `.forge/evidence/<phase>/<artifact>` |
+| State | `.forge/forge-state.json` |
 
 ## Platform Support
 
-| Platform | Support Level |
-|----------|-------------|
-| **Claude Code** | Full (primary target) |
-| **Codex CLI** | Partial (agents via AGENTS.md) |
-| **Gemini CLI** | Partial (extension manifest) |
+| Platform | Level | Notes |
+|----------|-------|-------|
+| **Claude Code** | Full | Primary target, all features |
+| **Codex CLI** | Partial | Agents via AGENTS.md |
+| **Gemini CLI** | Partial | Extension manifest |
 
 ## Philosophy
 
 - **Earned Progression** -- every phase transition requires evidence
-- **Transparent State** -- workflow progress is always visible and queryable
-- **Scope Discipline** -- focused workflow, nothing extraneous
-- **Depth Over Breadth** -- 10 deep skills, not 100 shallow ones
-- **Agent Autonomy With Boundaries** -- capable agents with restricted scope
-- **Composable Without Coupling** -- skills work alone or as a pipeline
+- **Transparent State** -- workflow progress is always visible
+- **Scope Discipline** -- nothing extraneous, nothing skipped
+- **Depth Over Breadth** -- 13 deep skills, not 100 shallow ones
 - **Verification Is Not Optional** -- evidence before assertions, always
+- **Discipline Resists Rationalization** -- skills are pressure-tested to resist excuses
+- **Own Your Tools** -- fork it, modify it, make it yours
 
 ## Contributing
 
-1. Fork the repository
-2. Create a branch for your change
-3. Follow the existing skill/agent format
-4. Submit a PR with a description of what you changed and why
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on adding skills, agents, hooks, and commands.
 
 ## License
 

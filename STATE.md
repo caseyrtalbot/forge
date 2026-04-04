@@ -1,33 +1,23 @@
 # Forge Build State
 
 ## Current Status
-- **Iteration**: 12 (COMPLETE)
-- **Phase**: Completion Verification
-- **Status**: COMPLETE
-- **Started**: 2026-03-27
+- **Version**: 2.0.0
+- **Phase**: Released
+- **Date**: 2026-04-04
 
-## All Phases Complete
-1. Iteration 1: Deep Architecture Extraction -- COMPLETE
-2. Iteration 2: Design Principles and Differentiation -- COMPLETE
-3. Iteration 3: Plugin Scaffold and Manifest Engineering -- COMPLETE
-4. Iteration 4: Skill Architecture and Core Skill Set -- COMPLETE
-5. Iteration 5: Agent Definitions and Team Architecture -- COMPLETE
-6. Iteration 6: Hook System and Workflow Enforcement -- COMPLETE
-7. Iteration 7: Rules, Commands, and Cross-Platform Support -- COMPLETE
-8. Iteration 8: Integration Testing and Workflow Validation -- COMPLETE
-9. Iteration 9: Remediation and Refinement -- COMPLETE
-10. Iteration 10: Documentation, README, and User Experience -- COMPLETE
-11. Iteration 11: Final Polish and Release Preparation -- COMPLETE
-12. Iteration 12: Completion Verification -- COMPLETE
+## Version History
 
-## Final Verification: ALL PASS
-- 54 files, all non-empty
-- All structural requirements met
-- Version 1.0.0 aligned across all manifests
-- Zero-context understandable
-- Original content confirmed
-- Security reviewed
-- Git ready
+### v2.0.0 (2026-04-04)
+Consolidated superpowers plugin content into forge. Established dynamic three-tier skill routing. Removed superpowers dependency.
+
+- 13 skills (3 discipline, 8 process, 2 utility)
+- 9 agents (all Opus, max effort)
+- 5 hooks (phase-gate, evidence-collector, commit-guardian, session lifecycle)
+- 4 commands
+- 102 tests passing
+
+### v1.0.0 (2026-03-29)
+Initial release. Phase-locked workflow with 10 skills, 9 agents, 5 hooks.
 
 ## Blocking Issues
 (none)
