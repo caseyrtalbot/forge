@@ -2,7 +2,7 @@
 
 ## Overview
 
-Forge is a Claude Code plugin that enforces a phase-locked development workflow. It consists of 10 skills, 9 agents, 5 hooks, 4 commands, and a project-level CLAUDE.md organized into a standard Claude Code plugin structure.
+Forge is a Claude Code plugin that enforces a phase-locked development workflow. It consists of 12 skills, 9 agents, 5 hooks, 4 commands, and a project-level CLAUDE.md organized into a standard Claude Code plugin structure.
 
 ## Plugin Structure
 
@@ -23,16 +23,18 @@ forge/
     land-changes/SKILL.md    # Phase: Integration
     trace-fault/SKILL.md     # Phase: Any (debugging)
     distill-lessons/SKILL.md # Phase: Any (terminal retrospective)
+    receive-feedback/SKILL.md# Phase: Any (code review receiving)
+    isolate-work/SKILL.md    # Phase: Any (git worktree management)
   agents/
     spec-analyst.md          # Validates specs (opus, read-only)
     task-decomposer.md       # Decomposes specs into tasks (opus, read-only)
     implementer.md           # Executes tasks with TDD (opus, full access)
-    quality-auditor.md       # Two-stage code review (opus, read+bash)
+    quality-auditor.md       # Spec compliance + code quality review (opus, read+bash)
     security-sentinel.md     # OWASP vulnerability scanning (opus, read+bash)
     test-strategist.md       # Test coverage auditing (opus, read+bash)
-    dependency-mapper.md     # Change impact analysis (sonnet, read-only)
+    dependency-mapper.md     # Change impact analysis (opus, read-only)
     integration-verifier.md  # Full suite + build checks (opus, read+bash)
-    doc-synthesizer.md       # Documentation sync (sonnet, read+write)
+    doc-synthesizer.md       # Documentation sync (opus, read+write)
   hooks/
     hooks.json               # Hook event declarations
   scripts/hooks/
@@ -79,29 +81,28 @@ Each phase transition requires evidence (user approval, passing tests, review re
 ## Key Design Decisions
 
 ### Phase Locking
-Phases proceed in strict order. The phase-gate hook prevents code edits during Discovery, Design, and Planning phases. This is enforced at the tool level (PreToolUse hook), not just in skill prose.
+Phases proceed in strict order. The phase-gate hook prevents code edits during Discovery, Design, and Planning phases via PreToolUse interception on Write, Edit, and MultiEdit tools. Phase transitions themselves are managed by skill instructions and the `/forge:advance` command, which checks gate conditions before progressing.
 
 ### Fresh Agent Per Task
 The drive-execution skill dispatches a fresh implementer agent for each plan task. This prevents context pollution between tasks and ensures each task gets focused attention. The orchestrator never implements tasks itself.
 
-### Two-Stage Review
-The quality-auditor checks spec compliance first, then code quality. This order matters: there is no point polishing code that does not match the spec.
+### Three-Stage Review
+The inspect-work skill reviews across three dimensions: spec compliance, code quality, then security. The quality-auditor agent handles the first two stages; the security-sentinel handles the third. Spec compliance must pass before code quality review begins. This order matters: there is no point polishing code that does not match the spec.
 
 ### Evidence Collection
-The evidence-collector hook automatically captures test and build output to `.forge/evidence/`. The confirm-complete skill requires this evidence before allowing progression to integration.
+The evidence-collector hook automatically captures test and build output to `.forge/evidence/`, including the command's exit code and a machine-readable `Status: PASS/FAIL/UNKNOWN` field. The commit-guardian hook validates that evidence represents passing results, not just command execution. The confirm-complete skill requires this evidence before allowing progression to integration.
 
 ### Runtime Profiles
 All hooks check `FORGE_HOOK_PROFILE` (minimal/standard/strict) and `FORGE_DISABLED_HOOKS` before executing. This lets users tune strictness without editing files.
 
 ### Project-Local State
-Workflow state lives in `.forge/` inside the project (not in a global location). This means state survives across sessions, machines, and contributors. The `.gitignore` excludes `.forge/` from version control.
+Workflow state lives in `.forge/` inside the project (not in a global location). This means state survives across sessions on the same machine. The `.gitignore` excludes `.forge/` from version control, so state does not transfer between machines or contributors.
 
 ## Model Routing
 
 | Model | Agents | Rationale |
 |-------|--------|-----------|
-| opus | spec-analyst, task-decomposer, implementer, quality-auditor, security-sentinel, test-strategist, integration-verifier | Reasoning, judgment, contextual understanding |
-| sonnet | dependency-mapper, doc-synthesizer | Mechanical search, pattern matching |
+| opus | All 9 agents (spec-analyst, task-decomposer, implementer, quality-auditor, security-sentinel, test-strategist, integration-verifier, dependency-mapper, doc-synthesizer) | Reasoning, judgment, contextual understanding |
 
 ## Security Model
 

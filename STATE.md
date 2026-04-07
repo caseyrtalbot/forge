@@ -10,7 +10,7 @@
 ### v2.0.0 (2026-04-04)
 Consolidated superpowers plugin content into forge. Established dynamic three-tier skill routing. Removed superpowers dependency.
 
-- 13 skills (3 discipline, 8 process, 2 utility)
+- 12 skills (3 discipline, 7 process, 2 utility)
 - 9 agents (all Opus, max effort)
 - 5 hooks (phase-gate, evidence-collector, commit-guardian, session lifecycle)
 - 4 commands

@@ -1,6 +1,6 @@
 {
   "name": "forge",
   "description": "Phase-locked development workflow with evidence gates",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "contextFileName": "GEMINI.md"
 }

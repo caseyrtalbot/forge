@@ -32,6 +32,22 @@ function main() {
     const command = toolResult.tool_input?.command || "";
     const output = toolResult.tool_response?.stdout || toolResult.tool_response?.output || "";
 
+    // Extract exit code — field name varies across Claude Code versions
+    const exitCode = toolResult.tool_response?.exit_code
+      ?? toolResult.tool_response?.exitCode
+      ?? toolResult.tool_response?.returncode
+      ?? null;
+
+    // Determine pass/fail status from exit code
+    let status;
+    if (exitCode === null || exitCode === undefined) {
+      status = "UNKNOWN";
+    } else if (exitCode === 0) {
+      status = "PASS";
+    } else {
+      status = "FAIL";
+    }
+
     // Only capture evidence for test/build commands
     const testPatterns = [
       /npm test/i,
@@ -84,10 +100,13 @@ function main() {
     const safeOutput = sanitize(output, 10000);
 
     const readableTimestamp = new Date().toISOString();
+    const exitCodeDisplay = exitCode !== null && exitCode !== undefined ? String(exitCode) : "N/A";
     const content = [
       `# ${isTest ? "Test" : "Build"} Results`,
       `Captured: ${readableTimestamp}`,
       `Command: ${safeCommand}`,
+      `Exit Code: ${exitCodeDisplay}`,
+      `Status: ${status}`,
       "",
       "## Output",
       safeOutput,
@@ -96,7 +115,7 @@ function main() {
 
     fs.writeFileSync(evidencePath, content, "utf-8");
     process.stderr.write(
-      `[Forge] Evidence captured: ${filename}\n`
+      `[Forge] Evidence captured: ${filename} (${status})\n`
     );
     process.exit(0);
   } catch (err) {

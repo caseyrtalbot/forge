@@ -8,7 +8,7 @@
     {
       "name": "forge",
       "description": "Phase-locked development workflow plugin. Enforces earned progression through discovery, design, planning, execution, verification, and integration.",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "source": "./",
       "author": {
         "name": "Forge Contributors"

@@ -14,7 +14,7 @@
 Evidence gates. Test-first discipline. No shortcuts.
 
 [![Version](https://img.shields.io/badge/version-2.0.0-blue)]()
-[![Skills](https://img.shields.io/badge/skills-13-green)]()
+[![Skills](https://img.shields.io/badge/skills-12-green)]()
 [![Agents](https://img.shields.io/badge/agents-9-green)]()
 [![Hooks](https://img.shields.io/badge/hooks-5-orange)]()
 [![License: MIT](https://img.shields.io/badge/license-MIT-gray)]()
@@ -27,7 +27,7 @@ Evidence gates. Test-first discipline. No shortcuts.
 
 Forge treats software construction as a series of earned progressions. Each phase produces demonstrable evidence before the next phase unlocks. The agent cannot skip steps, cut corners, or claim completion without proof.
 
-**Rules are suggestions. Gates are enforcement.** You can write "always test first" in CLAUDE.md, and the agent will agree, then skip it when it feels confident. Forge intercepts tool use: the `phase-gate` hook blocks code edits during pre-execution phases, the `commit-guardian` requires test evidence before commits, and discipline skills resist rationalization under pressure. The difference between a rule and Forge is the difference between a suggestion and a wall.
+**Rules are suggestions. Gates are enforcement.** You can write "always test first" in CLAUDE.md, and the agent will agree, then skip it when it feels confident. Forge enforces at two levels: **hooks** intercept tool use at runtime (phase-gate blocks code edits during pre-execution phases; commit-guardian requires passing test evidence before commits), and **skills** provide deeply specified workflow instructions with hard gates, anti-patterns, and evidence requirements that resist rationalization under pressure. Hooks are walls. Skills are the operating manual that makes those walls effective.
 
 ## Workflow
 
@@ -126,7 +126,7 @@ After `/forge:start`, the agent enters Discovery: reads project context, asks qu
 
 ## What's Inside
 
-### 13 Skills
+### 12 Skills
 
 | Skill | Phase | Purpose | Lines |
 |-------|-------|---------|-------|

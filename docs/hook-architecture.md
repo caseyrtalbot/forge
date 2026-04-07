@@ -5,7 +5,7 @@
 | Event | Hook | Purpose |
 |-------|------|---------|
 | SessionStart | session-init | Load workflow state, present status |
-| PreToolUse (Write/Edit) | phase-gate | Prevent code edits during discovery/design/planning phases |
+| PreToolUse (Write/Edit/MultiEdit) | phase-gate | Prevent code edits during discovery/design/planning phases |
 | PostToolUse (Bash) | evidence-collector | Capture test/build output as verification evidence |
 | PreToolUse (Bash matching git commit) | commit-guardian | Validate verification has passed before commits |
 | SessionEnd | session-capture | Save workflow state for cross-session continuity |
@@ -39,13 +39,13 @@ Disable specific hooks: `FORGE_DISABLED_HOOKS=phase-gate,commit-guardian`
 - Exit codes: 0 = success (JSON stdout parsed for structured control), non-zero = error (stderr logged)
 - Blocking hooks (phase-gate, commit-guardian) use `hookSpecificOutput.permissionDecision: "deny"` with exit 0
 - Hooks read `.forge/forge-state.json` from the current working directory for state
-- Phase-gate intercepts Write/Edit tools only. Bash commands that generate code files (scaffolding tools, code generators) are not gated. This is a deliberate tradeoff: gating Bash broadly would create false positives on routine commands.
+- Phase-gate intercepts Write/Edit/MultiEdit tools. Bash commands that generate code files (scaffolding tools, code generators) are not gated. This is a deliberate tradeoff: gating Bash broadly would create false positives on routine commands.
 
 ## Commit Guardian Behavior by Phase
 
 | Phase | Behavior |
 |-------|----------|
 | discovery, design, planning | Allow (commits are for docs/specs/plans) |
-| execution | Warn if no test evidence, but allow (per-task commits expected) |
+| execution | Block if no fresh passing test evidence (must be <30 min old and Status: PASS) |
 | verification | Block if no test or build evidence exists |
 | integration | Allow |

@@ -121,7 +121,13 @@ const evidenceSubdir = path.join(
 fs.mkdirSync(evidenceSubdir, { recursive: true });
 fs.writeFileSync(
   path.join(evidenceSubdir, "test-results-fake.txt"),
-  "# Test Results\nAll tests passed",
+  "# Test Results\nCaptured: 2026-04-06T00:00:00Z\nCommand: npm test\nExit Code: 0\nStatus: PASS\n\n## Output\nAll tests passed",
+  "utf-8"
+);
+// Also need build evidence for verification phase
+fs.writeFileSync(
+  path.join(evidenceSubdir, "build-results-fake.txt"),
+  "# Build Results\nCaptured: 2026-04-06T00:00:00Z\nCommand: npm run build\nExit Code: 0\nStatus: PASS\n\n## Output\nBuild succeeded",
   "utf-8"
 );
 
@@ -139,7 +145,7 @@ const execFreshEvidenceSubdir = path.join(
 fs.mkdirSync(execFreshEvidenceSubdir, { recursive: true });
 fs.writeFileSync(
   path.join(execFreshEvidenceSubdir, "test-results-fresh.txt"),
-  "# Test Results\n10 passed, 0 failed",
+  "# Test Results\nCaptured: 2026-04-06T00:00:00Z\nCommand: npm test\nExit Code: 0\nStatus: PASS\n\n## Output\n10 passed, 0 failed",
   "utf-8"
 );
 

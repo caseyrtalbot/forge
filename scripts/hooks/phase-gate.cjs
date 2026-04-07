@@ -30,7 +30,6 @@ function main() {
     }
 
     const toolInput = JSON.parse(input);
-    const filePath = toolInput.tool_input?.file_path || toolInput.tool_input?.path || "";
 
     // Only gate code files, not docs/specs/plans/configs
     const docPatterns = [
@@ -45,10 +44,25 @@ function main() {
       /forge-state/i,
     ];
 
-    const isDocFile = docPatterns.some((p) => p.test(filePath));
-    if (isDocFile) {
-      // Always allow doc/config file edits
-      process.exit(0);
+    const isDocPath = (p) => docPatterns.some((re) => re.test(p));
+
+    // Handle MultiEdit: extract all file paths from edits array
+    const edits = toolInput.tool_input?.edits;
+    if (Array.isArray(edits) && edits.length > 0) {
+      const filePaths = edits.map(e => e.file_path || e.path || "").filter(Boolean);
+      const hasCodeFile = filePaths.some(p => !isDocPath(p));
+      if (!hasCodeFile) {
+        // All targets are doc/config files, allow
+        process.exit(0);
+      }
+      // At least one code file targeted — fall through to phase check
+    } else {
+      // Single-file tools (Write/Edit)
+      const filePath = toolInput.tool_input?.file_path || toolInput.tool_input?.path || "";
+      if (isDocPath(filePath)) {
+        // Always allow doc/config file edits
+        process.exit(0);
+      }
     }
 
     // Check workflow state
