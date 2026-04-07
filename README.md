@@ -108,8 +108,11 @@ Or from a local clone:
 
 ```bash
 git clone https://github.com/caseyrtalbot/forge.git
-claude plugins install ./forge
+claude plugins marketplace add ./forge
+claude plugins install forge@caseyrtalbot
 ```
+
+**Restart Claude Code after installing** to load skills, agents, and hooks.
 
 **Requirements:** Claude Code v1.0.33+, Node.js 18+, Git
 
