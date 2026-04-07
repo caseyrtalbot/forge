@@ -100,7 +100,7 @@ Forge uses a three-tier routing system instead of blanket invocation rules.
 
 ```bash
 # Add the marketplace and install
-claude plugins marketplace add caseyrtalbot/claude-plugins
+claude plugins marketplace add caseyrtalbot/forge
 claude plugins install forge@caseyrtalbot
 ```
 

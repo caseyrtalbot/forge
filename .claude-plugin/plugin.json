@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "Phase-locked development workflow with test-first discipline, evidence-gated verification, and dynamic skill routing.",
   "author": {
-    "name": "Forge Contributors"
+    "name": "Casey Talbot"
   },
   "homepage": "https://github.com/caseyrtalbot/forge",
   "repository": "https://github.com/caseyrtalbot/forge",
