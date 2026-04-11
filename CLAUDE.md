@@ -36,7 +36,13 @@ These skills activate when their description matches the current task. Claude's 
 discover-intent, shape-design, chart-tasks, drive-execution, inspect-work, land-changes, distill-lessons, receive-feedback
 
 **Tier 3 -- User-Invoked Only**
-Available via `/forge:isolate-work`. Never auto-invoked.
+Available via slash invocation. All Tier 3 skills carry `disable-model-invocation: true` and must never auto-trigger:
+
+- `/forge:start` -- initiate a new workflow and enter Discovery
+- `/forge:status` -- show the current phase, evidence, and pending gates (read-only)
+- `/forge:advance` -- check exit gates and advance to the next phase when all pass
+- `/forge:audit` -- run the cross-cutting quality, security, and integration audit
+- `/forge:isolate-work` -- create an isolated git worktree for feature work
 
 **Priority when multiple skills match:**
 Process skills first (discover-intent, trace-fault), then implementation skills (prove-first, drive-execution). Discipline skills (Tier 1) layer on top of any active process or implementation skill.

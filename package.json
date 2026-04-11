@@ -1,6 +1,6 @@
 {
   "name": "forge",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Phase-locked development workflow plugin for Claude Code",
   "type": "module",
   "license": "MIT",

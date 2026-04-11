@@ -13,8 +13,8 @@
 
 Evidence gates. Test-first discipline. No shortcuts.
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue)]()
-[![Skills](https://img.shields.io/badge/skills-12-green)]()
+[![Version](https://img.shields.io/badge/version-2.1.0-blue)]()
+[![Skills](https://img.shields.io/badge/skills-16-green)]()
 [![Agents](https://img.shields.io/badge/agents-9-green)]()
 [![Hooks](https://img.shields.io/badge/hooks-5-orange)]()
 [![License: MIT](https://img.shields.io/badge/license-MIT-gray)]()
@@ -90,11 +90,15 @@ Forge uses a three-tier routing system instead of blanket invocation rules.
 
 `discover-intent` | `shape-design` | `chart-tasks` | `drive-execution` | `inspect-work` | `land-changes` | `distill-lessons` | `receive-feedback`
 
-**Tier 3 -- User-invoked.** Available via slash command, never auto-triggered.
+**Tier 3 -- User-invoked.** Available via slash invocation, never auto-triggered. All carry `disable-model-invocation: true`.
 
-| Skill | Command |
-|-------|---------|
-| `isolate-work` | `/forge:isolate-work` |
+| Skill | Invocation | Purpose |
+|-------|------------|---------|
+| `start` | `/forge:start` | Initiate a new workflow |
+| `status` | `/forge:status` | Show current phase and progress |
+| `advance` | `/forge:advance` | Check gates, advance to next phase |
+| `audit` | `/forge:audit` | Run quality, security, and integration audit |
+| `isolate-work` | `/forge:isolate-work` | Create an isolated git worktree |
 
 ## Install
 
@@ -129,22 +133,28 @@ After `/forge:start`, the agent enters Discovery: reads project context, asks qu
 
 ## What's Inside
 
-### 12 Skills
+### 16 Skills
 
-| Skill | Phase | Purpose | Lines |
-|-------|-------|---------|-------|
-| `discover-intent` | Discovery | Refine what to build through structured dialogue | 89 |
-| `shape-design` | Design | Create spec with architecture, data flow, edge cases | 97 |
-| `chart-tasks` | Planning | Decompose spec into atomic tasks with verification | 113 |
-| `drive-execution` | Execution | Orchestrate fresh-agent-per-task with status handling | 124 |
-| `prove-first` | Execution | Test-first discipline with Iron Law enforcement | 108 |
-| `inspect-work` | Verification | Three-stage review with re-review loops | 126 |
-| `confirm-complete` | Verification | Evidence-based completion, fresh execution required | 128 |
-| `land-changes` | Integration | Merge/PR/keep/discard with user consent | 94 |
-| `trace-fault` | Any | Root cause analysis with architecture escalation | 132 |
-| `distill-lessons` | Any | Workflow retrospective | 89 |
-| `receive-feedback` | Any | Code review receiving with pushback framework | 120 |
-| `isolate-work` | Any | Git worktree management with safety verification | 98 |
+Tiers 1 and 2 are described in the Skill Selection section above. Tier 3 skills (user-invoked) are `start`, `status`, `advance`, `audit`, and `isolate-work`.
+
+| Skill | Phase | Purpose |
+|-------|-------|---------|
+| `discover-intent` | Discovery | Refine what to build through structured dialogue |
+| `shape-design` | Design | Create spec with architecture, data flow, edge cases |
+| `chart-tasks` | Planning | Decompose spec into atomic tasks with verification |
+| `drive-execution` | Execution | Orchestrate fresh-agent-per-task with status handling |
+| `prove-first` | Execution | Test-first discipline with Iron Law enforcement |
+| `inspect-work` | Verification | Three-stage review with re-review loops |
+| `confirm-complete` | Verification | Evidence-based completion, fresh execution required |
+| `land-changes` | Integration | Merge/PR/keep/discard with user consent |
+| `trace-fault` | Any | Root cause analysis with architecture escalation |
+| `distill-lessons` | Any | Workflow retrospective |
+| `receive-feedback` | Any | Code review receiving with pushback framework |
+| `isolate-work` | Any (user-invoked) | Git worktree management with safety verification |
+| `start` | Any (user-invoked) | Initiate a new workflow |
+| `status` | Any (user-invoked) | Show current phase, progress, and pending gates |
+| `advance` | Any (user-invoked) | Check gates and advance to next phase |
+| `audit` | Verification (user-invoked) | Cross-cutting quality, security, and integration audit |
 
 Every skill includes: HARD-GATE enforcement, dot process flow diagram, anti-patterns section, evidence requirements, and explicit transitions.
 
@@ -175,15 +185,6 @@ The `implementer` agent reports structured status: **DONE**, **DONE_WITH_CONCERN
 | `evidence-collector` | PostToolUse (Bash) | Capture test and build output as evidence |
 | `commit-guardian` | PreToolUse (Bash) | Require fresh test evidence before git commits (blocks stale evidence during execution) |
 | `session-capture` | SessionEnd | Persist state for cross-session continuity |
-
-### 4 Commands
-
-| Command | Purpose |
-|---------|---------|
-| `/forge:start` | Initiate a new workflow |
-| `/forge:status` | Show current phase and progress |
-| `/forge:advance` | Check gates, advance to next phase |
-| `/forge:audit` | Run quality, security, and completeness audit |
 
 ## Key Concepts
 

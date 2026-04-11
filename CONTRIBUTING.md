@@ -44,11 +44,6 @@
 6. Use `${CLAUDE_PLUGIN_ROOT}` for paths, never hardcode
 7. Add test fixtures in `tests/fixtures/` and test cases in `tests/run-tests.cjs`
 
-## Adding a Command
-
-1. Create `commands/<command-name>.md` with a description, usage, and process section
-2. Command filenames become the slash command: `start.md` becomes `/forge:start`
-
 ## Skill Tier Assignment
 
 When adding a skill, determine its tier:
