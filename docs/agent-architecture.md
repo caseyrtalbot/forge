@@ -20,7 +20,7 @@ model: <opus|sonnet>              # Model routing
 
 ## Agent Dispatch Rules
 
-- Skills dispatch agents, not users directly (except via /forge:audit)
+- Skills dispatch agents, not users directly (except via the user-invoked `/forge:audit` skill)
 - Each agent receives precise context: task description, relevant files, success criteria
 - Agents are stateless: fresh instance per dispatch, no session history inheritance
 - The orchestrating skill reviews agent output before acting on it
@@ -31,7 +31,7 @@ model: <opus|sonnet>              # Model routing
 |------|---------|---------|
 | Single-pass | One agent reviews once | dependency-mapper, doc-synthesizer |
 | Two-stage | Spec compliance then code quality | quality-auditor (combines both stages) |
-| Multi-agent | Multiple specialists in parallel | /forge:audit command (quality + security + integration) |
+| Multi-agent | Multiple specialists in parallel | `/forge:audit` user-invoked skill (quality + security + integration) |
 
 ## Scope Boundaries
 

@@ -149,7 +149,7 @@ Workflow state is tracked in a `forge-state.json` file in the project's `.forge/
 1. **Phase-locked state machine**: No reference plugin enforces a strict phase progression with evidence gates at critical transitions. gstack suggests an order. superpowers has hard gates at design>code. Forge enforces critical transitions through hooks (phase-gate blocks code edits before a plan exists; commit-guardian blocks commits without passing test evidence) and guides the rest through deeply specified skill instructions with hard gates and anti-patterns.
 2. **Project-local workflow state**: `.forge/` directory tracks workflow progress in the project itself (not in a global location). State survives across sessions on the same machine. The `.forge/` directory is gitignored and does not transfer between machines or contributors.
 3. **Evidence accumulation**: Each phase produces evidence that is recorded and auditable. The verification phase can check not just "does it work now" but "was each step done properly."
-4. **Gate-based advancement command**: Users can invoke a `/forge:advance` command that checks all gates for the current phase and either advances or reports what's blocking.
+4. **Gate-based advancement skill**: Users can invoke the `/forge:advance` user-invoked skill, which checks all gates for the current phase and either advances or reports what's blocking.
 5. **Workflow resumption**: Because state is in `.forge/`, a new session can pick up exactly where the last one left off, including mid-execution task progress.
 
 ---

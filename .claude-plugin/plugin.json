@@ -1,6 +1,6 @@
 {
   "name": "forge",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Phase-locked development workflow with test-first discipline, evidence-gated verification, and dynamic skill routing.",
   "author": {
     "name": "Casey Talbot"

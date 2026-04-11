@@ -43,11 +43,6 @@ forge/
     evidence-collector.cjs    # PostToolUse: capture test/build output
     commit-guardian.cjs       # PreToolUse: validate verification before commits
     session-capture.cjs       # SessionEnd: save state for cross-session continuity
-  commands/
-    start.md                 # /forge:start -- initiate workflow
-    status.md                # /forge:status -- show phase and progress
-    advance.md               # /forge:advance -- check gates, progress
-    audit.md                 # /forge:audit -- quality/security/completeness check
   CLAUDE.md                  # Consolidated rules (workflow, quality, safety)
   .codex/AGENTS.md           # Codex CLI compatibility
   gemini-extension.json      # Gemini CLI compatibility
@@ -81,7 +76,7 @@ Each phase transition requires evidence (user approval, passing tests, review re
 ## Key Design Decisions
 
 ### Phase Locking
-Phases proceed in strict order. The phase-gate hook prevents code edits during Discovery, Design, and Planning phases via PreToolUse interception on Write, Edit, and MultiEdit tools. Phase transitions themselves are managed by skill instructions and the `/forge:advance` command, which checks gate conditions before progressing.
+Phases proceed in strict order. The phase-gate hook prevents code edits during Discovery, Design, and Planning phases via PreToolUse interception on Write, Edit, and MultiEdit tools. Phase transitions themselves are managed by skill instructions and the user-invoked `/forge:advance` skill, which checks gate conditions before progressing.
 
 ### Fresh Agent Per Task
 The drive-execution skill dispatches a fresh implementer agent for each plan task. This prevents context pollution between tasks and ensures each task gets focused attention. The orchestrator never implements tasks itself.

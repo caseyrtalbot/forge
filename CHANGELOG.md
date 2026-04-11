@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.1.0 - 2026-04-11
+
+### Changed
+- Migrated all four slash commands from `commands/` to `skills/` so they share the same frontmatter surface as the rest of the plugin (phase, gates, transitions, `disable-model-invocation`). The `commands/` directory has been removed.
+  - `/forge:start`, `/forge:status`, `/forge:advance`, `/forge:audit` are now user-invoked skills in Tier 3, alongside `/forge:isolate-work`.
+  - All four carry `disable-model-invocation: true`. The model must not auto-trigger them — phase advancement, status checks, workflow start, and cross-cutting audits are user decisions.
+  - User-facing invocation is unchanged: `/forge:<name>` still works the same way.
+- Tier 3 section in `CLAUDE.md` and `README.md` now lists all five user-invoked skills.
+- `README.md` skill count badge updated from 12 to 16.
+- `docs/architecture.md` tree diagram no longer references the removed `commands/` directory.
+- `CONTRIBUTING.md` "Adding a Command" section removed; Tier 3 skills are added the same way as any other skill.
+
+### Why
+The four commands sat outside the rest of the plugin's skill architecture: they could not declare `phase`, `transitions`, `gates`, or `disable-model-invocation`, and because of that the model could be tempted to fire `/forge:advance` or `/forge:audit` on its own judgment. Moving them into `skills/` with `disable-model-invocation: true` closes that gap and makes the whole plugin uniformly skill-based.
+
 ## 2.0.1 - 2026-04-04
 
 ### Enhanced
