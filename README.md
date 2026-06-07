@@ -13,7 +13,7 @@
 
 Evidence gates. Test-first discipline. No shortcuts.
 
-[![Version](https://img.shields.io/badge/version-2.1.0-blue)]()
+[![Version](https://img.shields.io/badge/version-2.2.0-blue)]()
 [![Skills](https://img.shields.io/badge/skills-16-green)]()
 [![Agents](https://img.shields.io/badge/agents-9-green)]()
 [![Hooks](https://img.shields.io/badge/hooks-5-orange)]()

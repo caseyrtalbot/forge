@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.2.0 - 2026-06-06
+
+Public-readiness release: Forge is now a single-target Claude Code plugin,
+free of personal affiliations and installable off the shelf.
+
+### Removed
+- Codex and Gemini integrations: deleted `.codex/AGENTS.md`, `GEMINI.md`, `gemini-extension.json`, and `docs/gemini-tools.md`, and scrubbed the platform-support references from the README and design docs. Forge targets Claude Code only.
+- `STATE.md`: a stale build-state file (claimed v2.0.0, 12 skills, 102 tests) that duplicated and contradicted this changelog and the manifests.
+
+### Changed
+- De-personalized for public release: author and owner are now "Forge Contributors", and the marketplace is named `forge` so install is `claude plugins install forge@forge`.
+- Reconciled documentation with the implementation: corrected component counts (16 skills, 9 agents, 5 hooks), the flat `.forge/evidence/verification/` evidence path, and the all-opus model routing (removed a sonnet tier no agent used).
+
+### Fixed
+- Aligned the `start`, `advance`, and `status` skills and the init template with the actual state schema (`current_phase`/`phases_completed`, not `phase`/`completed_phases`), and formalized the `intent` field. Skills no longer instruct writing state fields the hooks silently ignore.
+
+### Security / Enforcement
+- phase-gate now also gates code-writing Bash (redirection, `tee`, `sed -i` to a code file) during discovery/design/planning, closing the `echo "..." > app.ts` bypass. Routine Bash and config/doc files remain ungated.
+
+### Tooling
+- `npm test` now runs all five suites (108 tests); the four skill-structure suites were previously orphaned from the default test command.
+
 ## 2.1.0 - 2026-04-11
 
 ### Changed
@@ -91,4 +113,3 @@ Initial release of Forge.
 - Phase-locked workflow state machine with evidence gates
 - Project-local state tracking in `.forge/` directory
 - Runtime hook profiles (FORGE_HOOK_PROFILE: minimal/standard/strict)
-- Cross-platform support: Claude Code (full), Codex CLI (partial), Gemini CLI (partial)
