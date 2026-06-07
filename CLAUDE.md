@@ -59,7 +59,7 @@ Workflow state lives in `.forge/forge-state.json` in the project directory. This
 
 - Specs: `docs/forge/specs/YYYY-MM-DD-<topic>-design.md`
 - Plans: `docs/forge/plans/YYYY-MM-DD-<topic>-plan.md`
-- Evidence: `.forge/evidence/<phase>/<artifact>`
+- Evidence: `.forge/evidence/verification/<artifact>`
 - State: `.forge/forge-state.json`
 
 ---

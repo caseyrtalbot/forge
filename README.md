@@ -225,7 +225,7 @@ export FORGE_DISABLED_HOOKS=phase-gate,commit-guardian  # Disable specific hooks
 |----------|----------|
 | Specs | `docs/forge/specs/YYYY-MM-DD-<topic>-design.md` |
 | Plans | `docs/forge/plans/YYYY-MM-DD-<topic>-plan.md` |
-| Evidence | `.forge/evidence/<phase>/<artifact>` |
+| Evidence | `.forge/evidence/verification/<artifact>` |
 | State | `.forge/forge-state.json` |
 
 ## Philosophy
@@ -233,14 +233,14 @@ export FORGE_DISABLED_HOOKS=phase-gate,commit-guardian  # Disable specific hooks
 - **Earned Progression** -- every phase transition requires evidence
 - **Transparent State** -- workflow progress is always visible
 - **Scope Discipline** -- nothing extraneous, nothing skipped
-- **Depth Over Breadth** -- 13 deep skills, not 100 shallow ones
+- **Depth Over Breadth** -- 16 deep skills, not 100 shallow ones
 - **Verification Is Not Optional** -- evidence before assertions, always
 - **Discipline Resists Rationalization** -- skills are pressure-tested to resist excuses
 - **Own Your Tools** -- fork it, modify it, make it yours
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details on adding skills, agents, hooks, and commands.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on adding skills, agents, and hooks.
 
 ## License
 

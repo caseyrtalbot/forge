@@ -7,16 +7,17 @@
 name: <kebab-case-identifier>
 description: "<when to deploy this agent and what it does>"
 tools: ["Read", "Write", ...]    # Restricted tool access
-model: <opus|sonnet>              # Model routing
+model: opus                       # All agents use opus
+effort: max
 ---
 ```
 
 ## Model Routing Rules
 
-| Model | When | Rationale |
-|-------|------|-----------|
-| opus | Reasoning-heavy tasks: spec analysis, quality review, security, implementation, test strategy, integration verification, performance | Needs deep judgment and full context |
-| sonnet | Mechanical tasks: dependency mapping, documentation sync | Pattern application, fast turnaround |
+All nine agents run on `model: opus` with `effort: max`. Every Forge agent
+task (spec analysis, decomposition, implementation, review, security,
+testing, integration, dependency mapping, documentation) requires deep
+judgment and full context, so there is no lighter-model tier.
 
 ## Agent Dispatch Rules
 

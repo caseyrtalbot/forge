@@ -2,7 +2,7 @@
 
 ## Overview
 
-Forge is a Claude Code plugin that enforces a phase-locked development workflow. It consists of 12 skills, 9 agents, 5 hooks, 4 commands, and a project-level CLAUDE.md organized into a standard Claude Code plugin structure.
+Forge is a Claude Code plugin that enforces a phase-locked development workflow. It consists of 16 skills, 9 agents, 5 hooks, and a project-level CLAUDE.md organized into a standard Claude Code plugin structure.
 
 ## Plugin Structure
 
@@ -24,7 +24,11 @@ forge/
     trace-fault/SKILL.md     # Phase: Any (debugging)
     distill-lessons/SKILL.md # Phase: Any (terminal retrospective)
     receive-feedback/SKILL.md# Phase: Any (code review receiving)
-    isolate-work/SKILL.md    # Phase: Any (git worktree management)
+    isolate-work/SKILL.md    # Phase: Any (user-invoked, git worktree management)
+    start/SKILL.md           # Phase: Any (user-invoked, initiate workflow)
+    status/SKILL.md          # Phase: Any (user-invoked, read-only status)
+    advance/SKILL.md         # Phase: Any (user-invoked, gate check + transition)
+    audit/SKILL.md           # Phase: Verification (user-invoked, cross-cutting audit)
   agents/
     spec-analyst.md          # Validates specs (opus, read-only)
     task-decomposer.md       # Decomposes specs into tasks (opus, read-only)
@@ -83,7 +87,7 @@ The drive-execution skill dispatches a fresh implementer agent for each plan tas
 The inspect-work skill reviews across three dimensions: spec compliance, code quality, then security. The quality-auditor agent handles the first two stages; the security-sentinel handles the third. Spec compliance must pass before code quality review begins. This order matters: there is no point polishing code that does not match the spec.
 
 ### Evidence Collection
-The evidence-collector hook automatically captures test and build output to `.forge/evidence/`, including the command's exit code and a machine-readable `Status: PASS/FAIL/UNKNOWN` field. The commit-guardian hook validates that evidence represents passing results, not just command execution. The confirm-complete skill requires this evidence before allowing progression to integration.
+The evidence-collector hook automatically captures test and build output to `.forge/evidence/verification/`, including the command's exit code and a machine-readable `Status: PASS/FAIL/UNKNOWN` field. The commit-guardian hook validates that evidence represents passing results, not just command execution. The confirm-complete skill requires this evidence before allowing progression to integration.
 
 ### Runtime Profiles
 All hooks check `FORGE_HOOK_PROFILE` (minimal/standard/strict) and `FORGE_DISABLED_HOOKS` before executing. This lets users tune strictness without editing files.

@@ -87,17 +87,15 @@ Workflow state is tracked in a `forge-state.json` file in the project's `.forge/
 ```json
 {
   "workflow_id": "feat-user-auth-2026-03-27",
+  "intent": "Add user authentication",
   "current_phase": "execution",
   "phases_completed": ["discovery", "design", "planning"],
-  "evidence": {
-    "discovery": { "approval": "user approved direction at 2026-03-27T14:30Z" },
-    "design": { "spec": "docs/forge/specs/user-auth-design.md", "approval": "user approved at 2026-03-27T15:00Z" },
-    "planning": { "plan": "docs/forge/plans/user-auth-plan.md", "tasks": 8, "all_have_verification": true }
-  },
   "current_task": 4,
   "total_tasks": 8
 }
 ```
+
+Evidence itself is not stored in this file. The `evidence` field is reserved; test and build results are captured as timestamped files under `.forge/evidence/verification/` by the evidence-collector hook and read back by the commit-guardian hook.
 
 ---
 
@@ -190,18 +188,19 @@ Agents are named as **noun-specialist** describing their capability:
 | Integration testing | `integration-verifier` |
 | Documentation | `doc-synthesizer` |
 
-### Command Names
-Commands are named as **single imperative verbs**:
+### User-Invoked Skill Names
+The Tier 3 (user-invoked) skills are named as **single imperative verbs** and surfaced as `/forge:<name>` slash invocations:
 
-| Command | Name | Purpose |
-|---------|------|---------|
+| Skill | Name | Purpose |
+|-------|------|---------|
 | Start workflow | `start` | Initiate a new Forge workflow |
 | Check status | `status` | Show current phase, progress, gates |
 | Advance phase | `advance` | Check gates and progress to next phase |
 | Run audit | `audit` | Quality/security/completeness check |
+| Isolate work | `isolate-work` | Create an isolated git worktree |
 
 ### File Conventions
 - Specs: `docs/forge/specs/<topic>-design.md`
 - Plans: `docs/forge/plans/<topic>-plan.md`
 - State: `.forge/forge-state.json`
-- Evidence: `.forge/evidence/<phase>/<artifact>`
+- Evidence: `.forge/evidence/verification/<artifact>`
