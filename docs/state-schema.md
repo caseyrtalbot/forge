@@ -7,6 +7,7 @@
 | Field | Type | Description |
 |-------|------|-------------|
 | workflow_id | string | Unique identifier for this workflow |
+| intent | string | Short description of what the workflow is building (seeded by `/forge:start`, optional) |
 | current_phase | string | One of: discovery, design, planning, execution, verification, integration |
 | phases_completed | string[] | Phases that have passed their exit gates |
 | total_tasks | number | Total tasks in the plan (set during planning) |

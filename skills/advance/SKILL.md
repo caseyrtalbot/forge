@@ -15,7 +15,7 @@ Evaluate all exit gate conditions for the current phase. If every gate passes, u
 <HARD-GATE>
 Never advance a phase on partial evidence. Every exit gate for the current phase must be satisfied before `forge-state.json` is mutated. If even one gate fails, leave state untouched and report the failures to the user.
 
-Never fabricate or infer evidence that is not on disk. "The tests probably pass" is not evidence. The `.forge/evidence/<phase>/` directory is the source of truth.
+Never fabricate or infer evidence that is not on disk. "The tests probably pass" is not evidence. The `.forge/evidence/verification/` directory is the source of truth.
 </HARD-GATE>
 
 ## Usage
@@ -26,15 +26,15 @@ Never fabricate or infer evidence that is not on disk. "The tests probably pass"
 
 1. Read `.forge/forge-state.json`. If no active workflow, report "No active Forge workflow" and exit.
 2. Read the exit gate definitions for the current phase from the corresponding phase skill's frontmatter.
-3. For each gate, check evidence in `.forge/evidence/<current-phase>/` and workflow state fields. Record PASS or FAIL per gate.
+3. For each gate, check evidence in `.forge/evidence/verification/` and workflow state fields. Record PASS or FAIL per gate.
 4. If any gate FAILS:
    a. Leave `forge-state.json` unchanged.
    b. Report every failing gate with the specific missing evidence.
    c. Suggest which skill the user should run to produce the missing evidence.
    d. Exit.
 5. If all gates PASS:
-   a. Move current phase into `completed_phases`.
-   b. Set `phase` to the next phase in the sequence.
+   a. Move current phase into `phases_completed`.
+   b. Set `current_phase` to the next phase in the sequence.
    c. Update `last_session` to now.
    d. Write the updated state.
    e. Invoke the next phase's skill.

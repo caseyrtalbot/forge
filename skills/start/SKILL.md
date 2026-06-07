@@ -22,7 +22,7 @@ Initiate a new Forge workflow. Check for existing workflow state in `.forge/`, c
 The optional `[description]` is a short phrase describing what the user wants to build. It becomes the initial `intent` field in `forge-state.json` and seeds the first `discover-intent` question.
 
 <HARD-GATE>
-Never create or overwrite `.forge/forge-state.json` if an active workflow already exists. An "active workflow" means `completed_phases` does not include all six phases. Overwriting active state destroys accumulated evidence and phase history.
+Never create or overwrite `.forge/forge-state.json` if an active workflow already exists. An "active workflow" means `phases_completed` does not include all six phases. Overwriting active state destroys accumulated evidence and phase history.
 
 If an active workflow exists, ask the user whether to resume or archive the existing one. Never decide unilaterally.
 </HARD-GATE>
@@ -31,13 +31,13 @@ If an active workflow exists, ask the user whether to resume or archive the exis
 
 1. Check `.forge/forge-state.json` for existing workflow state.
 2. If an active workflow exists, show its current phase and progress, then ask the user whether to resume or archive.
-3. If no workflow or user chose archive, create `.forge/` directory and write a fresh `forge-state.json` using the initialization template (`phase: discovery`, `completed_phases: []`, `created_at: <now>`).
+3. If no workflow or user chose archive, create `.forge/` directory and write a fresh `forge-state.json` using the initialization template (`current_phase: discovery`, `phases_completed: []`, `created_at: <now>`).
 4. Record the user's `[description]` argument (if provided) as the initial `intent`.
 5. Invoke the `discover-intent` skill to begin Phase 1.
 
 ## Evidence
 
-- `.forge/forge-state.json` exists with `phase: discovery` after this skill runs.
+- `.forge/forge-state.json` exists with `current_phase: discovery` after this skill runs.
 - `discover-intent` is the next active skill.
 
 ## Transitions

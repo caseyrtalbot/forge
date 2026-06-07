@@ -20,7 +20,7 @@ Show the current Forge workflow status including active phase, completed phases,
    - Current phase
    - Completed phases (in order)
    - Session count and created-at timestamp
-   - Evidence files present in `.forge/evidence/` grouped by phase
+   - Evidence files present in `.forge/evidence/verification/`
 3. If in the Execution phase, read the active plan file and show task progress (`N of M tasks complete`, with the current task highlighted).
 4. Evaluate the exit gate conditions for the current phase and list any that are not yet met. These are the blockers for `/forge:advance`.
 
@@ -35,7 +35,7 @@ Sessions:           <count>
 Created:            <iso timestamp>
 
 Evidence collected:
-  <phase>: <file count> (<short list>)
+  verification: <file count> (<short list of test/build results>)
 
 Task progress (execution only):
   N of M tasks complete
