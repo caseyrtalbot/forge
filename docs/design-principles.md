@@ -105,13 +105,13 @@ Evidence itself is not stored in this file. The `evidence` field is reserved; te
 |--------|----------------|---------------------|-------------|-------------------|
 | **Workflow enforcement** | Role personas in prompts | Hard gates in skill prose | Hook-based profiling | **Phase-locked state machine with evidence gates** |
 | **Skill depth** | Very deep (1500-2000 lines) | Deep (500-1000 lines) | Shallow (100-300 lines) | **Deep (500-800 lines) with process flow diagrams** |
-| **Agent model** | Single agent, role-framed | Single + ad-hoc subagents | 28 standalone agents | **10-15 capability-focused agents with explicit scope** |
+| **Agent model** | Single agent, role-framed | Single + ad-hoc subagents | 28 standalone agents | **9 capability-focused agents with explicit scope** |
 | **Hook philosophy** | Minimal (2 safety hooks) | Minimal (1 session hook) | Extensive (15+ hooks) | **Focused (5 hooks) with runtime profiles** |
 | **State tracking** | ~/.gstack/ files | None persistent | SQLite state store | **Project-local .forge/ directory with JSON state** |
 | **Ordering metaphor** | Sprint (Think>Plan>Build>Review>Test>Ship) | Chain (brainstorm>plan>execute>review>finish) | Flexible (no enforced order) | **Phase lock (discovery>design>planning>execution>verification>integration)** |
 | **Evidence model** | Checklists | HARD-GATE tags | Coverage percentages | **Gate conditions requiring executed output** |
 | **Cross-platform** | Claude, Codex, Kiro | Claude, Codex, OpenCode, Gemini, Cursor | Claude, Codex, Cursor, OpenCode, Antigravity | **Claude Code (single-target, deeply integrated)** |
-| **Scope** | 28 skills + browser | 14 skills | 125 skills + 60 commands | **10-12 core skills, nothing extraneous** |
+| **Scope** | 28 skills + browser | 14 skills | 125 skills + 60 commands | **16 focused skills, nothing extraneous** |
 | **Learning** | Local analytics | None | Homunculus/instincts | **None (out of scope, complexity not justified)** |
 
 ### What Forge Takes Inspiration From (and Transforms)
