@@ -424,6 +424,58 @@ test("phase-gate: skips in minimal profile", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Phase Gate Tests (continued): code-writing Bash gating
+// ---------------------------------------------------------------------------
+
+test("phase-gate: blocks code-writing bash during discovery", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: discoveryDir,
+    stdin: readFixture("pretooluse-bash-write-code.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    /permissionDecision.*deny/.test(result.stdout),
+    `Expected deny for 'echo ... > app.ts' during discovery, got: ${result.stdout}`
+  );
+});
+
+test("phase-gate: allows routine bash (npm test) during discovery", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: discoveryDir,
+    stdin: readFixture("pretooluse-bash-npm-test.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    !/deny/.test(result.stdout),
+    `Expected no deny for 'npm test', got: ${result.stdout}`
+  );
+});
+
+test("phase-gate: allows bash writing a doc file during discovery", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: discoveryDir,
+    stdin: readFixture("pretooluse-bash-write-doc.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    !/deny/.test(result.stdout),
+    `Expected no deny for redirect to a .md file, got: ${result.stdout}`
+  );
+});
+
+test("phase-gate: allows code-writing bash during execution", () => {
+  const result = runHook(HOOKS.phaseGate, {
+    cwd: executionDir,
+    stdin: readFixture("pretooluse-bash-write-code.json"),
+  });
+  assert(result.status === 0, `Expected exit 0, got ${result.status}`);
+  assert(
+    !/deny/.test(result.stdout),
+    `Expected no deny in execution phase, got: ${result.stdout}`
+  );
+});
+
+// ---------------------------------------------------------------------------
 // Commit Guardian Tests (continued): execution warning, verification allow
 // ---------------------------------------------------------------------------
 

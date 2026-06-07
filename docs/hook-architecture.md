@@ -5,7 +5,7 @@
 | Event | Hook | Purpose |
 |-------|------|---------|
 | SessionStart | session-init | Load workflow state, present status |
-| PreToolUse (Write/Edit/MultiEdit) | phase-gate | Prevent code edits during discovery/design/planning phases |
+| PreToolUse (Write/Edit/MultiEdit/Bash) | phase-gate | Prevent code edits during discovery/design/planning phases |
 | PostToolUse (Bash) | evidence-collector | Capture test/build output as verification evidence |
 | PreToolUse (Bash matching git commit) | commit-guardian | Validate verification has passed before commits |
 | SessionEnd | session-capture | Save workflow state for cross-session continuity |
@@ -39,7 +39,7 @@ Disable specific hooks: `FORGE_DISABLED_HOOKS=phase-gate,commit-guardian`
 - Exit codes: 0 = success (JSON stdout parsed for structured control), non-zero = error (stderr logged)
 - Blocking hooks (phase-gate, commit-guardian) use `hookSpecificOutput.permissionDecision: "deny"` with exit 0
 - Hooks read `.forge/forge-state.json` from the current working directory for state
-- Phase-gate intercepts Write/Edit/MultiEdit tools. Bash commands that generate code files (scaffolding tools, code generators) are not gated. This is a deliberate tradeoff: gating Bash broadly would create false positives on routine commands.
+- Phase-gate intercepts Write/Edit/MultiEdit tools, and Bash commands that write a code file via redirection, `tee`, or `sed -i` (e.g. `echo ... > app.ts`). Routine Bash (test runners, git, ls, package installs) is never gated, and config/doc files (`.json`, `.yaml`, `.toml`, `.md`) stay editable in every phase. This narrow Bash check closes the `echo > file.ts` bypass without the false positives that gating Bash broadly would cause. The bypass is not fully closed (a code generator that writes via an interpreter is not detected); the gate raises the cost of circumvention rather than making it impossible.
 
 ## Commit Guardian Behavior by Phase
 

@@ -14,7 +14,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write|Edit|MultiEdit|Bash",
         "hooks": [
           {
             "type": "command",
@@ -22,7 +22,7 @@
             "timeout": 15
           }
         ],
-        "description": "Prevents code edits when the current workflow phase requires design or planning first"
+        "description": "Prevents code edits (via editor tools or code-writing Bash) when the current workflow phase requires design or planning first"
       },
       {
         "matcher": "Bash",

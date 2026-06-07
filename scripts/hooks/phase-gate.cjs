@@ -1,12 +1,32 @@
 #!/usr/bin/env node
 
-// Forge: Phase Gate Hook (PreToolUse on Write/Edit)
+// Forge: Phase Gate Hook (PreToolUse on Write/Edit/MultiEdit/Bash)
 // Prevents code file edits when the current workflow phase is
-// discovery, design, or planning. Allows edits to spec/plan/doc files.
+// discovery, design, or planning. Allows edits to spec/plan/doc/config
+// files. For Bash, gates only commands that write code files via
+// redirection/tee/sed (e.g. `echo ... > app.ts`); routine commands pass.
 // Uses FORGE_HOOK_PROFILE to determine if this hook should run.
 
 const fs = require("fs");
 const path = require("path");
+
+// Source-code file extensions. Config (.json/.yaml/.toml) and docs (.md)
+// are intentionally NOT here: Forge treats config and docs as editable
+// during pre-execution phases.
+const CODE_EXT =
+  "(?:ts|tsx|js|jsx|mjs|cjs|py|go|rs|java|rb|php|c|cc|cpp|cxx|h|hpp|cs|swift|kt|kts|scala|sh|bash|zsh|sql|vue|svelte|lua|pl|dart|ex|exs|erl|clj)";
+
+// Detect Bash commands that write a code file via redirection, tee, or sed -i.
+// Conservative by design: matches only an unambiguous write to a code-file
+// target, so routine commands (npm test, git status, ls) are never gated.
+function isBashCodeWrite(command) {
+  const patterns = [
+    new RegExp(">>?\\s*['\"]?[^\\s'\"|&;<>]+\\." + CODE_EXT + "\\b", "i"),
+    new RegExp("\\btee\\s+(?:-a\\s+)?['\"]?[^\\s'\"|&;]+\\." + CODE_EXT + "\\b", "i"),
+    new RegExp("\\bsed\\s+-i\\b[^|&;]*\\." + CODE_EXT + "\\b", "i"),
+  ];
+  return patterns.some((re) => re.test(command));
+}
 
 function main() {
   try {
@@ -46,10 +66,18 @@ function main() {
 
     const isDocPath = (p) => docPatterns.some((re) => re.test(p));
 
-    // Handle MultiEdit: extract all file paths from edits array
-    const edits = toolInput.tool_input?.edits;
-    if (Array.isArray(edits) && edits.length > 0) {
-      const filePaths = edits.map(e => e.file_path || e.path || "").filter(Boolean);
+    const toolName = toolInput.tool_name || "";
+    const ti = toolInput.tool_input || {};
+
+    if (toolName === "Bash" || (ti.command && !ti.file_path && !ti.edits)) {
+      // Bash: gate only commands that write code files. Anything else passes.
+      if (!isBashCodeWrite(ti.command || "")) {
+        process.exit(0);
+      }
+      // It is a code-writing command — fall through to phase check.
+    } else if (Array.isArray(ti.edits) && ti.edits.length > 0) {
+      // MultiEdit: extract all file paths from the edits array
+      const filePaths = ti.edits.map(e => e.file_path || e.path || "").filter(Boolean);
       const hasCodeFile = filePaths.some(p => !isDocPath(p));
       if (!hasCodeFile) {
         // All targets are doc/config files, allow
@@ -58,7 +86,7 @@ function main() {
       // At least one code file targeted — fall through to phase check
     } else {
       // Single-file tools (Write/Edit)
-      const filePath = toolInput.tool_input?.file_path || toolInput.tool_input?.path || "";
+      const filePath = ti.file_path || ti.path || "";
       if (isDocPath(filePath)) {
         // Always allow doc/config file edits
         process.exit(0);
@@ -80,7 +108,7 @@ function main() {
     // Block code edits during pre-execution phases
     const blockedPhases = ["discovery", "design", "planning"];
     if (blockedPhases.includes(phase)) {
-      // Exit code 2 = block with message
+      // Block with a permission decision (deny) on stdout, exit 0.
       const output = JSON.stringify({
         hookSpecificOutput: {
           hookEventName: "PreToolUse",

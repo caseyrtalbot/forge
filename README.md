@@ -181,7 +181,7 @@ The `implementer` agent reports structured status: **DONE**, **DONE_WITH_CONCERN
 | Hook | Event | Enforcement |
 |------|-------|-------------|
 | `session-init` | SessionStart | Load workflow state, display phase status |
-| `phase-gate` | PreToolUse (Write/Edit) | Block code edits during discovery/design/planning |
+| `phase-gate` | PreToolUse (Write/Edit/Bash) | Block code edits (and code-writing Bash) during discovery/design/planning |
 | `evidence-collector` | PostToolUse (Bash) | Capture test and build output as evidence |
 | `commit-guardian` | PreToolUse (Bash) | Require fresh test evidence before git commits (blocks stale evidence during execution) |
 | `session-capture` | SessionEnd | Persist state for cross-session continuity |
