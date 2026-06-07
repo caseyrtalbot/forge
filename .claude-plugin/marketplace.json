@@ -1,10 +1,10 @@
 {
-  "name": "caseyrtalbot",
+  "name": "forge",
   "metadata": {
     "description": "Phase-locked development workflow with evidence gates at every transition"
   },
   "owner": {
-    "name": "Casey Talbot"
+    "name": "Forge Contributors"
   },
   "plugins": [
     {

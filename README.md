@@ -105,7 +105,7 @@ Forge uses a three-tier routing system instead of blanket invocation rules.
 ```bash
 # Add the marketplace and install
 claude plugins marketplace add caseyrtalbot/forge
-claude plugins install forge@caseyrtalbot
+claude plugins install forge@forge
 ```
 
 Or from a local clone:
@@ -113,7 +113,7 @@ Or from a local clone:
 ```bash
 git clone https://github.com/caseyrtalbot/forge.git
 claude plugins marketplace add ./forge
-claude plugins install forge@caseyrtalbot
+claude plugins install forge@forge
 ```
 
 **Restart Claude Code after installing** to load skills, agents, and hooks.
