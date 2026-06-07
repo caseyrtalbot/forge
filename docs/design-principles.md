@@ -112,7 +112,7 @@ Workflow state is tracked in a `forge-state.json` file in the project's `.forge/
 | **State tracking** | ~/.gstack/ files | None persistent | SQLite state store | **Project-local .forge/ directory with JSON state** |
 | **Ordering metaphor** | Sprint (Think>Plan>Build>Review>Test>Ship) | Chain (brainstorm>plan>execute>review>finish) | Flexible (no enforced order) | **Phase lock (discovery>design>planning>execution>verification>integration)** |
 | **Evidence model** | Checklists | HARD-GATE tags | Coverage percentages | **Gate conditions requiring executed output** |
-| **Cross-platform** | Claude, Codex, Kiro | Claude, Codex, OpenCode, Gemini, Cursor | Claude, Codex, Cursor, OpenCode, Antigravity | **Claude Code primary, Codex/Gemini secondary** |
+| **Cross-platform** | Claude, Codex, Kiro | Claude, Codex, OpenCode, Gemini, Cursor | Claude, Codex, Cursor, OpenCode, Antigravity | **Claude Code (single-target, deeply integrated)** |
 | **Scope** | 28 skills + browser | 14 skills | 125 skills + 60 commands | **10-12 core skills, nothing extraneous** |
 | **Learning** | Local analytics | None | Homunculus/instincts | **None (out of scope, complexity not justified)** |
 

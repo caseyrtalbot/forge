@@ -228,14 +228,6 @@ export FORGE_DISABLED_HOOKS=phase-gate,commit-guardian  # Disable specific hooks
 | Evidence | `.forge/evidence/<phase>/<artifact>` |
 | State | `.forge/forge-state.json` |
 
-## Platform Support
-
-| Platform | Level | Notes |
-|----------|-------|-------|
-| **Claude Code** | Full | Primary target, all features |
-| **Codex CLI** | Partial | Agents via AGENTS.md |
-| **Gemini CLI** | Partial | Extension manifest |
-
 ## Philosophy
 
 - **Earned Progression** -- every phase transition requires evidence

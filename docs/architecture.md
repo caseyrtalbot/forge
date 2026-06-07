@@ -44,8 +44,6 @@ forge/
     commit-guardian.cjs       # PreToolUse: validate verification before commits
     session-capture.cjs       # SessionEnd: save state for cross-session continuity
   CLAUDE.md                  # Consolidated rules (workflow, quality, safety)
-  .codex/AGENTS.md           # Codex CLI compatibility
-  gemini-extension.json      # Gemini CLI compatibility
   docs/                      # Design docs, validation reports
 ```
 
