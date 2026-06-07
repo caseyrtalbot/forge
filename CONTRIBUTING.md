@@ -69,15 +69,14 @@ Update the Skill Selection section in `CLAUDE.md` when adding Tier 1 or Tier 2 s
 ## Testing
 
 ```bash
-# Run hook tests
+# Run the full suite (hook tests + all skill-structure tests)
 npm test
-
-# Run skill content tests
-node tests/run-skill-content-tests.cjs
-node tests/skill-receive-feedback-structure.cjs
-node tests/skill-techniques-structure.cjs
-node tests/isolate-work-structure.cjs
 ```
+
+`npm test` chains every suite: `run-tests.cjs` (hook behavior),
+`run-skill-content-tests.cjs`, `isolate-work-structure.cjs`,
+`skill-receive-feedback-structure.cjs`, and `skill-techniques-structure.cjs`.
+Run any one directly with `node tests/<file>.cjs` while iterating.
 
 When adding a skill, add structural validation tests that verify:
 - File exists with correct frontmatter

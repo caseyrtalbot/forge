@@ -15,6 +15,6 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node tests/run-tests.cjs"
+    "test": "node tests/run-tests.cjs && node tests/run-skill-content-tests.cjs && node tests/isolate-work-structure.cjs && node tests/skill-receive-feedback-structure.cjs && node tests/skill-techniques-structure.cjs"
   }
 }
